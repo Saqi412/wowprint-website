@@ -4,6 +4,7 @@
     python3 tools/build.py            # für Netlify (saubere URLs)
     python3 tools/build.py --preview  # Links auf index.html, für lokale Vorschau
 """
+import hashlib
 import os
 import sys
 from html import escape
@@ -39,12 +40,20 @@ class Page:
         return rel or "./"
 
     def asset(self, p):
-        if self.absolute and not PREVIEW:
-            return "/assets/" + p
-        return "../" * self.depth + "assets/" + p
+        base = "/assets/" if self.absolute and not PREVIEW else "../" * self.depth + "assets/"
+        return base + p + version(p)
 
     def form_action(self, target):
         return "/" + target if not PREVIEW else self.url(target)
+
+
+def version(p):
+    """Cache-Busting: ?v=<Hash> ändert sich, sobald sich die Datei ändert."""
+    f = os.path.join(ROOT, "assets", p)
+    if p.startswith("fonts/") or not os.path.exists(f):
+        return ""
+    with open(f, "rb") as fh:
+        return "?v=" + hashlib.md5(fh.read()).hexdigest()[:8]
 
 
 ARROW = '<svg class="arrow" viewBox="0 0 18 12" aria-hidden="true"><path d="M0 6h16M11 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>'
