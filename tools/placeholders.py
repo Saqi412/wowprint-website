@@ -23,7 +23,9 @@ def zoom(src, path, box=(.2, .15, .8, .85), flip=False):
     im = Image.open(src); W, H = im.size
     c = im.crop((int(W*box[0]), int(H*box[1]), int(W*box[2]), int(H*box[3])))
     if flip: c = ImageOps.mirror(c)
-    c = c.resize((c.width * 2, c.height * 2), Image.LANCZOS).filter(ImageFilter.UnsharpMask(2, 60, 2))
+    if c.width < 1200:
+        f = 1200 / c.width
+        c = c.resize((int(c.width * f), int(c.height * f)), Image.LANCZOS)
     c.save(path, quality=85)
 
 def out(n): return os.path.join(IMG, n)
