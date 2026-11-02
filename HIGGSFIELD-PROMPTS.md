@@ -6,8 +6,8 @@ Ziel: Jedes Bild soll so nah wie möglich am Designvorschlag des Kunden sein, nu
 
 1. Wähle in Higgsfield ein Bildmodell, das **Referenzbilder** unterstützt (z. B. Nano Banana oder Seedream).
 2. Lade **zwei Referenzen** hoch:
-   - **Bildvorlage**: den passenden Ausschnitt aus `bilder-originale.zip` (gleicher Dateiname wie in der Tabelle unten). So bleibt Bildaufbau, Perspektive und Farbe wie im Entwurf.
-   - **Logo**: `higgsfield/logo-schwarz-auf-rosa.png` (oder `logo-schwarz-transparent.png`).
+   - **Bildvorlage**: den passenden Ausschnitt aus dem Ordner `vorlagen/` (gleicher Dateiname wie in der Tabelle unten). So bleibt Bildaufbau, Perspektive und Farbe wie im Entwurf.
+   - **Logo**: `logo/logo-schwarz-auf-rosa.png` (oder `logo-schwarz-transparent.png`).
 3. Prompt aus der Tabelle kopieren **und den Stil-Zusatz hinten anhängen**.
 4. Im angegebenen Format generieren, beste Variante als **JPG mit exakt dem Dateinamen** speichern und hier im Thread hochladen.
 
@@ -21,7 +21,7 @@ Tipp: Wenn das Logo nicht sauber wird, lieber 3–4 Varianten generieren. Kleine
 
 ## Teil 1: Die 12 Hauptbilder (zuerst diese)
 
-Diese ersetzen genau die Bilder aus dem Entwurf. Die **Vorlage** findest du in `bilder-originale.zip`.
+Diese ersetzen genau die Bilder aus dem Entwurf. Die **Vorlage** findest du im Ordner `vorlagen/`.
 
 | Datei | Vorlage | Format | Prompt |
 |---|---|---|---|
