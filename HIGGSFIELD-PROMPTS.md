@@ -1,101 +1,76 @@
-# Higgsfield – Bildliste WOW PRINT
+# Higgsfield – neue Bilder für WOW PRINT
 
-So gehst du vor: Prompt kopieren, im angegebenen Format generieren, als JPG mit **exakt dem Dateinamen** speichern und hier im Thread hochladen (oder direkt nach `site/assets/img/` legen).
+Ziel: Jedes Bild soll so nah wie möglich am Designvorschlag des Kunden sein, nur scharf und mit dem richtigen Logo.
 
-**Stil-Zusatz für jeden Prompt** (hinten anhängen, damit alles einheitlich aussieht):
+## So gehst du vor (pro Bild)
 
-> high-end editorial commercial photography, color palette strictly pastel pink (#F5BDBE), deep black and off-white, minimal and bold, soft diffused studio light, crisp details, shot on medium format, 8k, no clutter
+1. Wähle in Higgsfield ein Bildmodell, das **Referenzbilder** unterstützt (z. B. Nano Banana oder Seedream).
+2. Lade **zwei Referenzen** hoch:
+   - **Bildvorlage**: den passenden Ausschnitt aus `bilder-originale.zip` (gleicher Dateiname wie in der Tabelle unten). So bleibt Bildaufbau, Perspektive und Farbe wie im Entwurf.
+   - **Logo**: `higgsfield/logo-schwarz-auf-rosa.png` (oder `logo-schwarz-transparent.png`).
+3. Prompt aus der Tabelle kopieren **und den Stil-Zusatz hinten anhängen**.
+4. Im angegebenen Format generieren, beste Variante als **JPG mit exakt dem Dateinamen** speichern und hier im Thread hochladen.
 
-Tipp: Schriftzüge wie „WOW“ oder „WOWPRINT“ klappen nicht immer perfekt. Lieber mehrere Varianten erzeugen und die sauberste nehmen.
+**Stil-Zusatz (immer anhängen):**
 
-## 1. Startseite
+> Recreate the composition, camera angle and colors of the reference image as closely as possible, but in sharp high resolution. Exact pastel pink color #F5BDBE, deep black, off-white. The brand logo is the wordmark "WOWPRINT." exactly as in the logo reference: "WOW" in ultra-bold black geometric sans-serif, "PRINT" in the same typeface as hollow black outline letters, followed by a period. Never change the logo, no other text. High-end commercial photography, soft diffused studio light, photorealistic, crisp details, no watermark.
 
-| Datei | Format | Prompt |
-|---|---|---|
-| `hero-car.jpg` | 16:9, min. 2400 px breit | Rear three-quarter view of a modern sports coupe fully wrapped in glossy pastel pink vinyl with giant bold black 'WOW' letters across the door, car placed on the right half of the frame, seamless pastel pink studio background matching the car, dramatic soft light |
-| `vehicle-before.jpg` | 2:1 | Plain white compact delivery van, side view, neutral light grey studio background, even light |
-| `vehicle-after.jpg` | 2:1 | **Mit `vehicle-before.jpg` als Referenzbild (gleiche Perspektive):** the same van fully wrapped in pastel pink matte vinyl with huge black 'WOW' lettering and small 'WOWPRINT' logo |
+Tipp: Wenn das Logo nicht sauber wird, lieber 3–4 Varianten generieren. Kleine Fehler im Logo kann man notfalls in Photoshop/Canva mit der Logo-PNG überdecken.
 
-## 2. Projekte (bis echte Referenzen da sind)
+---
 
-| Datei | Format | Prompt |
-|---|---|---|
-| `project-vehicle.jpg` | 4:3 | Black SUV with large matte grey 'WOW' lettering on the doors, parked on a wet street, moody overcast light |
-| `project-windows.jpg` | 4:3 | Glass storefront at dusk with pink tinted window graphics and black 'WOWPRINT' logo, modern interior visible |
-| `project-textile.jpg` | 4:3 | Back of a person wearing a pastel pink hoodie with black 'WOWPRINT' print, urban background, shallow depth of field |
-| `project-print.jpg` | 4:3 | Large pink posters with oversized black 'WOW' typography, extreme close-up at an angle |
+## Teil 1: Die 12 Hauptbilder (zuerst diese)
 
-## 3. Leistungsseiten
+Diese ersetzen genau die Bilder aus dem Entwurf. Die **Vorlage** findest du in `bilder-originale.zip`.
 
-Pro Leistung vier Bilder: Hauptbild (Karte auf der Startseite + grosses Bild oben), Detail, Produktion und Ergebnis.
+| Datei | Vorlage | Format | Prompt |
+|---|---|---|---|
+| `hero-car.jpg` | `hero-car.png` | 16:9, min. 2400 px breit | A Porsche 911 (992 generation) wrapped in glossy pastel pink vinyl, side-rear three-quarter view, the car fills the right part of the frame and is cropped at the top and the right edge. Huge bold black letters "WOW" across the door, black wheels, black window trim, red full-width LED tail light bar at the rear. Seamless pastel pink studio background in the same pink as the car, soft reflections on the paint. |
+| `service-vehicle.jpg` | `service-vehicle.png` | 16:10, min. 2400 px | The same pastel pink wrapped Porsche 911 (992) in side view, huge bold black "WOW" letters on the door, black wheels, light off-white studio background, close crop on the door and rear wheel. |
+| `service-windows.jpg` | `service-windows.png` | 16:10, min. 2400 px | Large glass window of a modern office or showroom seen from outside, the "WOWPRINT." logo applied as black vinyl lettering on the glass, behind it a bright minimal interior with a meeting table and chairs bathed in soft pastel pink light, dark slim window frames. |
+| `service-textile.jpg` | `service-textile.png` | 16:10, min. 2400 px | Back view of a person wearing an oversized pastel pink hoodie, the "WOWPRINT." logo printed small in black in the centre of the upper back, plain light grey studio background, soft light, fabric texture visible. |
+| `service-print.jpg` | `service-print.png` | 16:10, min. 2400 px | Close-up of several pastel pink printed posters fanned out diagonally on a table, each with oversized bold black "WOW" lettering bleeding off the edges, shallow depth of field, studio light. |
+| `service-signage.jpg` | `service-signage.png` | 16:10, min. 2400 px | A rectangular pastel pink aluminium sign panel with the black "WOWPRINT." logo, mounted on a light grey concrete wall, seen at a slight angle, crisp edges and subtle shadow. |
+| `service-design.jpg` | `service-design.png` | 16:10, min. 2400 px | Designer flat lay at an angle: pastel pink paper sheets and posters with huge bold black "WOW" typography, a black business card with the white "WOWPRINT." logo, clean off-white surface, top-down perspective. |
+| `service-digital.jpg` | `service-digital.png` | 16:10, min. 2400 px | A silver laptop on a light grey desk showing a website with a pastel pink background and the large black "WOWPRINT." logo in the centre, minimal bright office in the background, slightly out of focus. |
+| `project-vehicle.jpg` | `project-vehicle.png` | 4:3, min. 2400 px | A black SUV parked on a wet asphalt street, huge bold matte grey "WOW" lettering across the side doors, trees and a building softly blurred in the background, overcast daylight, moody reflections. |
+| `project-windows.jpg` | `project-windows.png` | 4:3, min. 2400 px | Street-level glass storefront of a modern building, the large black "WOWPRINT." logo on the glass, interior glowing in soft pastel pink light, dark metal frames, early evening. |
+| `project-textile.jpg` | `project-textile.png` | 4:3, min. 2400 px | Back view of a person in a pastel pink hoodie with the black "WOWPRINT." logo printed across the upper back, standing outdoors in front of a blurred light stone building, shallow depth of field. |
+| `project-print.jpg` | `project-print.png` | 4:3, min. 2400 px | Extreme close-up of stacked pastel pink posters with oversized black "WOW" letters cut off at the edges, dramatic diagonal composition, studio light. |
 
-### 01 Vehicle – Fahrzeugbeschriftung & Folierung
+## Teil 2: Vorher / Nachher (Seite „Vehicle“)
 
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-vehicle.jpg` | 16:10, min. 2400 px | A premium van fully wrapped in pastel pink matte vinyl with huge bold black 'wow' letters on the side |
-| `fahrzeugbeschriftung-2.jpg` | 4:5 | Close-up of a squeegee and gloved hand applying pink vinyl wrap over a car door edge |
-| `fahrzeugbeschriftung-3.jpg` | 1:1 | Wrapping technician working on a black car in a clean bright workshop with pink vinyl rolls |
-| `fahrzeugbeschriftung-4.jpg` | 4:3 | Fleet of three compact delivery vans side by side, all wrapped in pastel pink with black 'wowprint' lettering, modern swiss street |
+| Datei | Vorlage | Format | Prompt |
+|---|---|---|---|
+| `vehicle-after.jpg` | dein neues `hero-car.jpg` | 2:1, min. 2400 px | Same Porsche 911 (992) as the reference, glossy pastel pink wrap with huge black "WOW" letters on the door, side-rear three-quarter view, pastel pink studio background. |
+| `vehicle-before.jpg` | dein neues `vehicle-after.jpg` | 2:1, min. 2400 px | Exactly the same Porsche 911, same angle, same framing and same studio, but in original silver factory paint with no wrap and no lettering. |
 
-### 02 Windows – Schaufenster & Sichtschutz
+## Teil 3: Galerie auf den Leistungsseiten (optional)
 
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-windows.jpg` | 16:10, min. 2400 px | Modern boutique storefront in a swiss old town with large window graphics in pastel pink and black, bold 'wow' lettering |
-| `schaufenster-2.jpg` | 4:5 | Frosted glass privacy film with subtle pink logo pattern in a modern office meeting room |
-| `schaufenster-3.jpg` | 1:1 | Installer applying large black vinyl letters on a shop window from inside, viewed through the glass |
-| `schaufenster-4.jpg` | 4:3 | Evening shot of an illuminated shop window with pink graphics, passers-by blurred |
-
-### 03 Textile – Textildruck & Veredelung
-
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-textile.jpg` | 16:10, min. 2400 px | Model wearing an oversized pastel pink hoodie with small black 'wowprint' chest print, back view, studio |
-| `textildruck-2.jpg` | 4:5 | Macro detail of black embroidery on pink fabric, thread texture visible |
-| `textildruck-3.jpg` | 1:1 | Screen printing station with black ink on pink t-shirts, hands pulling a squeegee |
-| `textildruck-4.jpg` | 4:3 | Flat lay of branded workwear: pink t-shirts, black caps and tote bags, neatly arranged |
-
-### 04 Print – Sticker · Folien · Printmedien
+Pro Leistung drei weitere Bilder. Als Vorlage das jeweilige neue Hauptbild aus Teil 1 verwenden, damit alles zusammenpasst.
 
 | Datei | Format | Prompt |
 |---|---|---|
-| `service-print.jpg` | 16:10, min. 2400 px | Stack of bold printed posters with huge black 'wow' typography on pink paper, slightly fanned out |
-| `print-2.jpg` | 4:5 | Die-cut pink and black stickers peeled from a sheet, macro, shallow depth of field |
-| `print-3.jpg` | 1:1 | Large format printer printing a pink poster in a clean print shop |
-| `print-4.jpg` | 4:3 | Business cards and flyers in pink and black on an off-white surface, top-down |
+| `fahrzeugbeschriftung-2.jpg` | 4:5 | Close-up of a gloved hand with a squeegee applying pastel pink vinyl wrap over the edge of a car door, black "WOW" letter partially visible. |
+| `fahrzeugbeschriftung-3.jpg` | 1:1 | Wrapping technician working on a Porsche 911 in a bright clean workshop, rolls of pastel pink vinyl on a rack. |
+| `fahrzeugbeschriftung-4.jpg` | 4:3 | Two compact vans side by side wrapped in pastel pink with the black "WOWPRINT." logo, modern Swiss street. |
+| `schaufenster-2.jpg` | 4:5 | Frosted glass privacy film with a subtle pastel pink pattern and the small "WOWPRINT." logo in a modern meeting room. |
+| `schaufenster-3.jpg` | 1:1 | Installer applying large black vinyl letters to a shop window, seen through the glass from outside. |
+| `schaufenster-4.jpg` | 4:3 | Boutique storefront at dusk with pastel pink window graphics and the black "WOWPRINT." logo, passers-by blurred. |
+| `textildruck-2.jpg` | 4:5 | Macro detail of the black "WOWPRINT." logo embroidered on pastel pink fabric, thread texture visible. |
+| `textildruck-3.jpg` | 1:1 | Screen printing station, hands pulling a squeegee with black ink over a pastel pink t-shirt. |
+| `textildruck-4.jpg` | 4:3 | Flat lay of branded merchandise: pastel pink hoodies and t-shirts, black caps and tote bags with the "WOWPRINT." logo. |
+| `print-2.jpg` | 4:5 | Die-cut pastel pink and black stickers with the "WOWPRINT." logo peeled from a sheet, macro, shallow depth of field. |
+| `print-3.jpg` | 1:1 | Large-format printer printing a pastel pink poster with huge black "WOW" lettering in a clean print shop. |
+| `print-4.jpg` | 4:3 | Pastel pink business cards and flyers with the black "WOWPRINT." logo on an off-white surface, top-down. |
+| `signaletik-2.jpg` | 4:5 | Detail of a 3D acrylic letter "W" in black mounted on a pastel pink panel, macro, side light. |
+| `signaletik-3.jpg` | 1:1 | Installer on a ladder mounting a pastel pink sign with the black "WOWPRINT." logo on a building facade. |
+| `signaletik-4.jpg` | 4:3 | Modern office wayfinding signs in pastel pink and black on white walls. |
+| `design-2.jpg` | 4:5 | Close-up of the black "WOWPRINT." logo printed on pastel pink paper, minimal. |
+| `design-3.jpg` | 1:1 | Monitor showing a brand identity layout in pastel pink and black, designer's hand on a drawing tablet. |
+| `design-4.jpg` | 4:3 | Brand identity mockup set: business cards, letterhead and paper bag in pastel pink and black with the "WOWPRINT." logo. |
+| `digital-2.jpg` | 4:5 | Hand holding a smartphone showing a pastel pink mobile website with the black "WOWPRINT." logo, blurred office background. |
+| `digital-3.jpg` | 1:1 | Designer working on a pastel pink and black website layout on a large monitor. |
+| `digital-4.jpg` | 4:3 | Laptop, tablet and phone side by side, all showing the same pastel pink "WOWPRINT." website, studio. |
 
-### 05 Signage – Schilder & Werbetafeln
-
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-signage.jpg` | 16:10, min. 2400 px | Sleek pastel pink aluminium sign with black 'wowprint' lettering mounted on a light concrete facade |
-| `signaletik-2.jpg` | 4:5 | Detail of a 3d acrylic letter sign edge, pink and black, macro |
-| `signaletik-3.jpg` | 1:1 | Installer on a ladder mounting a large sign on a building facade |
-| `signaletik-4.jpg` | 4:3 | Modern office wayfinding signs in black and pink on white walls |
-
-### 06 Design – Grafik · Branding · Logo
-
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-design.jpg` | 16:10, min. 2400 px | Designer's desk with logo sketches, pink and black brand swatches and printed mockups, top-down |
-| `design-2.jpg` | 4:5 | Close-up of a bold black logo printed on pink paper, minimal |
-| `design-3.jpg` | 1:1 | Monitor showing a brand identity layout in pink and black, designer's hand on a tablet |
-| `design-4.jpg` | 4:3 | Brand identity mockup set: business cards, letterhead, bag in pink and black |
-
-### 07 Digital – Webdesign & Websites
-
-| Datei | Format | Prompt |
-|---|---|---|
-| `service-digital.jpg` | 16:10, min. 2400 px | Laptop on a minimal desk displaying a bold pink website with huge black typography |
-| `digital-2.jpg` | 4:5 | Smartphone in a hand showing a pink and black mobile website, blurred office background |
-| `digital-3.jpg` | 1:1 | Close-up of a designer working on a website layout in figma, pink and black ui |
-| `digital-4.jpg` | 4:3 | Multiple devices (laptop, tablet, phone) showing the same pink and black website, studio |
-
-## 4. Optional
-
-| Datei | Format | Prompt |
-|---|---|---|
-| `og-image.jpg` | 1200×630 | Pastel pink background, a pink wrapped sports car on the right, space on the left for text (für Link-Vorschauen in WhatsApp & Co.) |
-
-Insgesamt 35 Bilder (+1 optional).
+Insgesamt: 12 Hauptbilder + 2 Vorher/Nachher + 21 Galerie (optional).
