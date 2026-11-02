@@ -17,6 +17,8 @@ PREVIEW = "--preview" in sys.argv
 OUT = ROOT if "--out" not in sys.argv else sys.argv[sys.argv.index("--out") + 1]
 
 C = COMPANY
+with open(os.path.join(os.path.dirname(__file__), "logo.svg"), encoding="utf-8") as _f:
+    LOGO = _f.read().replace('xmlns:xlink="http://www.w3.org/1999/xlink" ', "").strip()
 ADDRESS = f'{C["street"]}, {C["zip"]} {C["city"]}'
 
 # ---------------------------------------------------------------- helpers
@@ -74,8 +76,8 @@ FEATURE_ICONS = [
 
 
 def wordmark(cls=""):
-    return (f'<span class="wordmark {cls}" aria-label="WOW PRINT"><span class="wm-wow" aria-hidden="true">WOW</span>'
-            f'<span class="wm-print" aria-hidden="true">PRINT</span><span class="wm-r" aria-hidden="true">®</span></span>')
+    svg = LOGO.replace("<svg ", f'<svg class="logo-svg {cls}" role="img" aria-label="WOW PRINT" ', 1)
+    return svg
 
 
 def lines(*ls):
@@ -337,9 +339,9 @@ def home():
 <section class="statement section">
   <div class="wrap">
     <span class="eyebrow" style="color:var(--pink)">Different by design</span>
-    <p class="statement-text">Wir sind keine 0815-Agentur. Wir verbinden <em>italienisches Designgefühl</em> mit <em>Schweizer Präzision</em> und machen Marken sichtbar, die man nicht mehr vergisst.</p>
+    <p class="statement-text">Wir sind keine 0815-Agentur. Wir sind <em>kreative Artisten</em> mit einem Gespür für Ästhetik, einem Auge fürs Detail und der Leidenschaft, aus jeder Marke <em>etwas Einzigartiges</em> zu machen.</p>
     <div class="statement-foot">
-      <span class="eyebrow" style="color:var(--paper)"><span class="it-flag" aria-hidden="true"><i style="background:#2f9b55"></i><i style="background:#f6f5f1"></i><i style="background:#d6403a"></i></span>&nbsp;Design con passione · Made in Rorschach</span>
+      <p class="statement-claim"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>Werbung können viele. Kunst nicht!</p>
       <a class="btn btn--light" href="{p.url("ueber-uns/")}" data-magnetic=".3">About us {ARROW}</a>
     </div>
   </div>
@@ -542,7 +544,7 @@ def about_page():
   <div class="wrap split">
     <div><span class="eyebrow" style="color:var(--pink)">Rorschach · Bodensee</span></div>
     <div>
-      <p class="big-quote" data-reveal>Am Bodensee zu Hause, für Kundinnen und Kunden in der ganzen Ostschweiz unterwegs.</p>
+      <p class="big-quote" data-reveal>Am Bodensee zu Hause, für Kundinnen und Kunden in der ganzen Schweiz unterwegs.</p>
       <p class="muted" style="margin-top:26px" data-reveal>{ADDRESS}</p>
       <a class="btn btn--light" style="margin-top:22px" href="{C["maps"]}" target="_blank" rel="noopener" data-magnetic=".3" data-reveal>Route planen {ARROW}</a>
     </div>

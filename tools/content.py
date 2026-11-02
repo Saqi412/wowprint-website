@@ -3,18 +3,18 @@
 
 COMPANY = {
     "name": "WOW PRINT",
-    "street": "Löwengartenstrasse 8",
+    "street": "Löwengartenstrasse 6",
     "zip": "9400",
     "city": "Rorschach",
     "country": "Schweiz",
     # TODO: echte Kontaktdaten eintragen, sobald vorhanden
     "phone": "+41 00 000 00 00",
     "phone_href": "+41000000000",
-    "email": "info@wowprint.ch",
+    "email": "info@wow-print.ch",
     "instagram": "#",
     "facebook": "#",
-    "domain": "https://www.wowprint.ch",
-    "maps": "https://www.google.com/maps/search/?api=1&query=L%C3%B6wengartenstrasse+8%2C+9400+Rorschach",
+    "domain": "https://www.wow-print.ch",
+    "maps": "https://www.google.com/maps/search/?api=1&query=L%C3%B6wengartenstrasse+6%2C+9400+Rorschach",
 }
 
 HOURS = [("Mo – Fr", "09:00 – 12:00"), ("", "14:00 – 17:00"), ("Sa – So", "geschlossen")]
