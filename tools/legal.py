@@ -72,7 +72,7 @@ def datenschutz(p):
 <p>Wenn Sie uns über ein Formular kontaktieren, werden Ihre Angaben und allfällig hochgeladene Dateien über den Formulardienst von Netlify übermittelt und gespeichert und uns per E-Mail weitergeleitet. Wir verwenden diese Daten ausschliesslich zur Bearbeitung Ihrer Anfrage. Zum Schutz vor Spam verwenden wir ein unsichtbares Prüffeld.</p>
 
 <h2>6. Bekanntgabe ins Ausland</h2>
-<p>Durch den Einsatz von Netlify können Personendaten in die USA übermittelt werden. Die USA gelten für Unternehmen, die unter dem Swiss-U.S. Data Privacy Framework zertifiziert sind, als Land mit angemessenem Datenschutz. Wo dies nicht zutrifft, stützen wir uns auf Standardvertragsklauseln oder andere geeignete Garantien. [Zertifizierungsstatus von Netlify vor Livegang prüfen]</p>
+<p>Durch den Einsatz von Netlify können Personendaten in die USA übermittelt werden. Die USA gelten für Unternehmen, die unter dem Swiss-U.S. Data Privacy Framework zertifiziert sind, als Land mit angemessenem Datenschutz. Wo dies nicht zutrifft, stützen wir uns auf Standardvertragsklauseln oder andere geeignete Garantien.</p>
 
 <h2>7. Cookies, Tracking und lokale Speicherung</h2>
 <p>Wir verwenden keine Tracking- oder Analyse-Cookies und keine Werbe-Tracker. Die Website speichert im Sitzungsspeicher Ihres Browsers lediglich einen technischen Hinweis, ob die Startanimation bereits angezeigt wurde. Dieser Eintrag enthält keine Personendaten und wird beim Schliessen des Browsers gelöscht.</p>
