@@ -30,3 +30,9 @@ Neue Bilder mit exakt dem Dateinamen aus `HIGGSFIELD-PROMPTS.md` nach `site/asse
 
 ## Technik
 GSAP + ScrollTrigger, Lenis (Smooth Scroll), Schriften Archivo und Inter lokal eingebunden (keine Google-Server, DSG-freundlich). Animationen respektieren `prefers-reduced-motion`.
+
+## Formular-Mails
+
+Kontakt- und Offerte-Anfragen verschickt `netlify/functions/submission-created.mjs` per SMTP.
+Nötige Netlify-Umgebungsvariablen: `SMTP_HOST`, `SMTP_PORT` (465/587), `SMTP_USER`, `SMTP_PASS`, optional `MAIL_TO` (Standard: info@wow-print.ch).
+Nach dem Ändern der Variablen neu deployen.
