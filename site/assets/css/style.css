@@ -285,7 +285,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   position: absolute; right: 0; top: 0; width: 50vw; height: 78%;
   z-index: 1; overflow: hidden;
 }
-.hero-media img { width: 100%; height: 115%; object-fit: cover; object-position: 30% 50%; }
+.hero-media img { width: 100%; height: 115%; object-fit: cover; object-position: 72% 50%; }
 .hero-media::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(90deg, var(--pink) 0%, rgba(245,189,190,0) 22%);
@@ -688,7 +688,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .services-grid { grid-template-columns: repeat(2, 1fr); }
   .service-card:nth-child(4n) { border-right: 1px solid var(--line); }
   .service-card:nth-child(2n) { border-right: 0; }
-  .hero-media { width: 100%; height: 52%; top: var(--header-h); }
+  .hero-media { width: 100%; height: 40%; top: var(--header-h); }
+  .hero-media img { object-position: 50% 50%; }
   .hero-media::after { background: linear-gradient(0deg, var(--pink) 0%, rgba(245,189,190,0) 40%); }
   .process-grid, .split, .contact-layout { grid-template-columns: 1fr; }
   .process-steps { grid-template-columns: 1fr 1fr; gap: 0 20px; }
