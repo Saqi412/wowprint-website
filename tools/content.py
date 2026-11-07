@@ -17,7 +17,7 @@ COMPANY = {
     "maps": "https://www.google.com/maps/search/?api=1&query=L%C3%B6wengartenstrasse+6%2C+9400+Rorschach",
 }
 
-HOURS = [("Mo – Fr", "09:00 – 12:00"), ("", "14:00 – 17:00"), ("Sa – So", "geschlossen")]
+HOURS = [("Mo – Fr", "0900 – 1200"), ("", "1400 – 1700")]
 
 SERVICES = [
     {

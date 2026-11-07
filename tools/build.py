@@ -169,7 +169,7 @@ def footer(p):
       </div>
       <div><h4>STUDIO</h4><p>{C["name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}<br>{C["country"]}</p>
         <p style="margin-top:12px"><a class="link-u" href="{C["maps"]}" target="_blank" rel="noopener">Route planen ↗</a></p></div>
-      <div><h4>ÖFFNUNGSZEITEN</h4>{hours_html()}<p class="open-status" style="margin-top:14px"><i></i><span>Mo–Fr 09–12 / 14–17</span></p></div>
+      <div><h4>ÖFFNUNGSZEITEN</h4>{hours_html()}</div>
       <div><h4>SERVICES</h4><ul>{svc}</ul></div>
       <div><h4>KONTAKT</h4><ul>
         <li><a class="link-u" href="tel:{C["phone_href"]}">{C["phone"]}</a></li>
@@ -275,6 +275,18 @@ def write(p, html):
 
 def img(p, name, alt, extra=""):
     return f'<img src="{p.asset("img/" + name)}" alt="{escape(alt)}" loading="lazy" decoding="async" {extra}>'
+
+GALLERY_EXTRA = {"fahrzeugbeschriftung": 2}
+
+
+def gallery_steps(p, s):
+    caps = ["Step 01", "Step 02", "Step 03", "Result"]
+    out = "".join(
+        f'<figure data-reveal>{img(p, f"{s["slug"]}-step{i}.jpg", f"{s["title"]} – {c}")}<figcaption>{c}</figcaption></figure>'
+        for i, c in enumerate(caps, 1))
+    for n in range(GALLERY_EXTRA.get(s["slug"], 0)):
+        out += f'<figure data-reveal>{img(p, f"{s["slug"]}-extra{n + 1}.jpg", s["title"])}</figure>'
+    return out
 
 # ---------------------------------------------------------------- pages
 
@@ -459,12 +471,7 @@ def service_page(i, s):
 <section class="section">
   <div class="wrap">
     <div class="section-head"><span class="eyebrow">Gallery</span><h2 class="display d-l" data-lines>{lines("In action.")}</h2></div>
-    <div class="gallery">
-      <figure class="g1" data-reveal>{img(p, s["img"], s["title"])}</figure>
-      <figure class="g2" data-reveal>{img(p, s["slug"] + "-2.jpg", s["title"] + " Detail")}<figcaption>Detail</figcaption></figure>
-      <figure class="g3" data-reveal>{img(p, s["slug"] + "-3.jpg", s["title"] + " Produktion")}<figcaption>Production</figcaption></figure>
-      <figure class="g4" data-reveal>{img(p, s["slug"] + "-4.jpg", s["title"] + " Ergebnis")}<figcaption>Result</figcaption></figure>
-    </div>
+    <div class="gallery gallery--steps">{gallery_steps(p, s)}</div>
   </div>
 </section>
 <section class="section bg-paper2">
@@ -519,8 +526,8 @@ def about_page():
 </section>
 <section class="duo">
   <div class="it">
-    <span class="eyebrow">Design con passione</span>
-    <h2 class="display d-xl" data-lines>{lines("Italian", "design.")}</h2>
+    <span class="eyebrow">Design with character.</span>
+    <h2 class="display d-xl" data-lines>{lines("The art", "of design.")}</h2>
     <p>Gespür für Ästhetik, Proportion und Stil. Wir glauben, dass gutes Design Emotionen auslöst und dass auch Werbetechnik schön sein darf.</p>
   </div>
   <div class="ch on-dark">
@@ -565,7 +572,7 @@ def contact_page():
       <div><h4>TELEFON</h4><a class="big-link link-u" href="tel:{C["phone_href"]}">{C["phone"]}</a></div>
       <div><h4>E-MAIL</h4><a class="big-link link-u" href="mailto:{C["email"]}">{C["email"]}</a></div>
       <div><h4>STUDIO</h4><p>{C["name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}</p><p style="margin-top:8px"><a class="link-u" href="{C["maps"]}" target="_blank" rel="noopener">Route planen ↗</a></p></div>
-      <div><h4>ÖFFNUNGSZEITEN</h4>{hours_html()}<p class="open-status" style="margin-top:12px"><i></i><span>Mo–Fr 09–12 / 14–17</span></p></div>
+      <div><h4>ÖFFNUNGSZEITEN</h4>{hours_html()}</div>
       <div><h4>SOCIAL</h4>{socials()}</div>
     </div>
     <div>

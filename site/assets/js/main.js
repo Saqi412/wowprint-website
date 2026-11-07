@@ -342,6 +342,21 @@
     }
   });
 
+  /* ---------- Footer-Schriftzug immer genau auf Containerbreite ---------- */
+  function fitGiant() {
+    $$('.footer-giant').forEach(function (el) {
+      var spans = el.children;
+      if (!spans.length) return;
+      el.style.fontSize = '100px';
+      var w = spans[spans.length - 1].getBoundingClientRect().right - spans[0].getBoundingClientRect().left;
+      var cs = getComputedStyle(el), box = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      if (w > 0 && box > 0) el.style.fontSize = (100 * box / w * 0.99) + 'px';
+    });
+  }
+  fitGiant();
+  window.addEventListener('resize', fitGiant);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitGiant);
+
   /* ---------- Öffnungszeiten-Status ---------- */
   function openStatus() {
     var parts;
