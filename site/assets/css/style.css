@@ -744,3 +744,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .statement-claim .dots { display: inline-flex; gap: 5px; }
 .statement-claim .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--pink); display: block; }
 @media (max-width: 960px) { .site-header .logo .logo-svg { height: 20px; } }
+
+/* Deutsche Titel sind länger: schmale Spalten etwas kleiner */
+.services-intro h2.d-l, .process-grid h2 { font-size: clamp(40px, 3.9vw, 66px); }
+@media (max-width: 1180px) { .services-intro h2.d-l { font-size: clamp(40px, 7vw, 96px); } }
+@media (max-width: 960px) { .process-grid h2 { font-size: clamp(40px, 9vw, 80px); } }

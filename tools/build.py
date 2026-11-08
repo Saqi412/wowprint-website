@@ -107,7 +107,7 @@ def marquee(items, pink=False, reverse=False):
             f'<div class="marquee-group">{inner}{inner}</div></div></div>')
 
 
-NAV = [("projekte/", "Work"), ("leistungen/", "Services"), ("ueber-uns/", "About"), ("kontakt/", "Contact")]
+NAV = [("projekte/", "Projekte"), ("leistungen/", "Leistungen"), ("ueber-uns/", "Über uns"), ("kontakt/", "Kontakt")]
 
 
 def header(p, current=""):
@@ -117,14 +117,14 @@ def header(p, current=""):
     )
     menu_links = "".join(
         f'<li><a href="{p.url(t)}"><small>0{i}</small>{label}</a></li>'
-        for i, (t, label) in enumerate([("", "Home")] + NAV + [("offerte/", "Get a quote")], 1)
+        for i, (t, label) in enumerate([("", "Start")] + NAV + [("offerte/", "Offerte anfragen")], 1)
     )
     menu_services = "".join(f'<a href="{p.url("leistungen/" + s["slug"] + "/")}">{s["title"]}</a>' for s in SERVICES)
     return f"""
 <a class="skip-link" href="#main">Zum Inhalt springen</a>
 <div class="preloader" aria-hidden="true">
   <div class="preloader-word"><span>W</span><span>O</span><span>W</span></div>
-  <div class="preloader-claim">We make you visible.</div>
+  <div class="preloader-claim">Wir machen Sie sichtbar.</div>
   <div class="preloader-count">0</div>
 </div>
 <div class="page-transition" aria-hidden="true"><span></span><span></span></div>
@@ -145,7 +145,7 @@ def header(p, current=""):
   <div class="wrap">
     <nav aria-label="Menü"><ul class="menu-links">{menu_links}</ul></nav>
     <div class="menu-side">
-      <div><h4>SERVICES</h4><div class="menu-services">{menu_services}</div></div>
+      <div><h4>LEISTUNGEN</h4><div class="menu-services">{menu_services}</div></div>
       <div><h4>STUDIO</h4><p>{C["name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}</p></div>
       <div><h4>KONTAKT</h4><p><a class="link-u" href="tel:{C["phone_href"]}">{C["phone"]}</a><br><a class="link-u" href="mailto:{C["email"]}">{C["email"]}</a></p></div>
       {socials()}
@@ -164,13 +164,13 @@ def footer(p):
     <div class="footer-grid">
       <div class="footer-brand">
         {wordmark()}
-        <p>Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. We make you visible.</p>
+        <p>Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. Wir machen Sie sichtbar.</p>
         <div style="margin-top:26px">{socials()}</div>
       </div>
       <div><h4>STUDIO</h4><p>{C["name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}<br>{C["country"]}</p>
         <p style="margin-top:12px"><a class="link-u" href="{C["maps"]}" target="_blank" rel="noopener">Route planen ↗</a></p></div>
       <div><h4>ÖFFNUNGSZEITEN</h4>{hours_html()}</div>
-      <div><h4>SERVICES</h4><ul>{svc}</ul></div>
+      <div><h4>LEISTUNGEN</h4><ul>{svc}</ul></div>
       <div><h4>KONTAKT</h4><ul>
         <li><a class="link-u" href="tel:{C["phone_href"]}">{C["phone"]}</a></li>
         <li><a class="link-u" href="mailto:{C["email"]}">{C["email"]}</a></li>
@@ -180,7 +180,7 @@ def footer(p):
     </div>
     <div class="footer-giant" aria-hidden="true">{giant}</div>
     <div class="footer-bottom">
-      <span>© <span data-year>2026</span> {C["name"]} · {C["city"]}, Switzerland</span>
+      <span>© <span data-year>2026</span> {C["name"]} · {C["city"]}, Schweiz</span>
       <nav aria-label="Rechtliches"><a class="link-u" href="{p.url("impressum/")}">Impressum</a><a class="link-u" href="{p.url("datenschutz/")}">Datenschutz</a><a class="link-u" href="{p.url("agb/")}">AGB</a></nav>
     </div>
   </div>
@@ -188,19 +188,26 @@ def footer(p):
 """
 
 
-def cta_band(p, title_lines=("LET’S MAKE", "SOMETHING WOW.")):
+def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
     l1, l2 = title_lines
     return f"""
 <section class="cta-band section">
   <div class="wrap">
     <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2)}">{l2}</span></span></span></h2>
     <div class="cta-side">
-      <p>Have a project?</p>
-      <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Get in touch {ARROW}</a>
+      <p>Haben Sie ein Projekt?</p>
+      <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Kontakt aufnehmen {ARROW}</a>
       <a class="btn btn--solid" href="{p.url("offerte/")}" data-magnetic=".3">Offerte anfragen {ARROW}</a>
     </div>
   </div>
 </section>"""
+
+
+def fit_style(title_lines, vw=11.0):
+    """Lange deutsche Wörter (z. B. SCHAUFENSTER.) passen sonst nicht in die Breite."""
+    longest = max(len(t) for t in title_lines)
+    size = min(vw, 84 / (longest * 0.74))
+    return "" if size >= vw else f' style="font-size:clamp(34px, {size:.2f}vw, 190px)"'
 
 
 def page_hero(p, eyebrow, title_lines, lead="", crumbs=None, bg_num="", extra=""):
@@ -214,7 +221,7 @@ def page_hero(p, eyebrow, title_lines, lead="", crumbs=None, bg_num="", extra=""
   {f'<div class="bg-num" aria-hidden="true">{bg_num}</div>' if bg_num else ''}
   <div class="wrap" style="position:relative">
     {crumb_html}
-    <h1 class="display">{lines(*title_lines)}</h1>
+    <h1 class="display"{fit_style(title_lines)}>{lines(*title_lines)}</h1>
     <div class="hero-bottom">
       {f'<p class="lead">{lead}</p>' if lead else '<span></span>'}
       <span class="eyebrow">{eyebrow}</span>
@@ -280,7 +287,7 @@ GALLERY_EXTRA = {"fahrzeugbeschriftung": 2}
 
 
 def gallery_steps(p, s):
-    caps = ["Step 01", "Step 02", "Step 03", "Result"]
+    caps = ["Schritt 01", "Schritt 02", "Schritt 03", "Ergebnis"]
     out = "".join(
         f'<figure data-reveal>{img(p, f"{s["slug"]}-step{i}.jpg", f"{s["title"]} – {c}")}<figcaption>{c}</figcaption></figure>'
         for i, c in enumerate(caps, 1))
@@ -304,7 +311,7 @@ def service_cards(p):
     cards += f"""
       <a class="service-card service-card--cta" href="{p.url("offerte/")}">
         <span class="num">08</span>
-        <span class="big">Your<br>idea?</span>
+        <span class="big">Ihre<br>Idee?</span>
         <p>Etwas Besonderes vor? Erzählen Sie uns davon, wir finden einen Weg.</p>
         <span class="go"><span>Offerte</span>{ARROW}</span>
       </a>"""
@@ -325,10 +332,10 @@ def home():
   <div class="hero-bgword" aria-hidden="true">WOW</div>
   <div class="hero-media">{img(p, "hero-car.jpg", "Sportwagen in Rosa, foliert mit WOW-Schriftzug", 'fetchpriority="high" loading="eager"')}</div>
   <div class="wrap hero-content">
-    <h1 class="display">{lines("We make", "you visible.")}</h1>
+    <h1 class="display">{lines("Wir machen", "Sie sichtbar.")}</h1>
     <div class="hero-bottom">
       <p class="lead">Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. Für Marken, die nicht wie alle anderen aussehen wollen.</p>
-      <a class="scroll-cue" href="#services">Scroll {ARROW_DOWN}</a>
+      <a class="scroll-cue" href="#services">Scrollen {ARROW_DOWN}</a>
     </div>
   </div>
 </section>
@@ -338,10 +345,10 @@ def home():
 <section class="section" id="services">
   <div class="wrap services-layout">
     <div class="services-intro">
-      <span class="eyebrow">Services</span>
-      <h2 class="display d-l" style="margin-top:18px" data-lines>{lines("What", "we do.")}</h2>
+      <span class="eyebrow">Leistungen</span>
+      <h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Was wir", "machen.")}</h2>
       <p class="lead" data-reveal>Sieben Disziplinen, ein Ziel: Ihre Marke sichtbar machen. Von der ersten Skizze bis zur fertigen Montage, alles aus einer Hand.</p>
-      <a class="btn" href="{p.url("leistungen/")}" data-magnetic=".3" data-reveal>Alle Services {ARROW}</a>
+      <a class="btn" href="{p.url("leistungen/")}" data-magnetic=".3" data-reveal>Alle Leistungen {ARROW}</a>
     </div>
     <div class="services-grid">{service_cards(p)}
     </div>
@@ -350,11 +357,11 @@ def home():
 
 <section class="statement section">
   <div class="wrap">
-    <span class="eyebrow" style="color:var(--pink)">Different by design</span>
+    <span class="eyebrow" style="color:var(--pink)">Anders aus Prinzip</span>
     <p class="statement-text">Wir sind keine 0815-Agentur. Wir sind <em>kreative Artisten</em> mit einem Gespür für Ästhetik, einem Auge fürs Detail und der Leidenschaft, aus jeder Marke <em>etwas Einzigartiges</em> zu machen.</p>
     <div class="statement-foot">
       <p class="statement-claim"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>Werbung können viele. Kunst nicht!</p>
-      <a class="btn btn--light" href="{p.url("ueber-uns/")}" data-magnetic=".3">About us {ARROW}</a>
+      <a class="btn btn--light" href="{p.url("ueber-uns/")}" data-magnetic=".3">Über uns {ARROW}</a>
     </div>
   </div>
 </section>
@@ -362,13 +369,13 @@ def home():
 <section class="projects" id="work">
   <div class="projects-pin">
     <div class="wrap section-head">
-      <span class="eyebrow">Selected work</span>
-      <h2 class="display d-xl" data-lines>{lines("Projects.")}</h2>
-      <a class="btn" href="{p.url("projekte/")}" data-magnetic=".3">All projects {ARROW}</a>
+      <span class="eyebrow">Ausgewählte Arbeiten</span>
+      <h2 class="display d-xl" data-lines>{lines("Projekte.")}</h2>
+      <a class="btn" href="{p.url("projekte/")}" data-magnetic=".3">Alle Projekte {ARROW}</a>
     </div>
     <div class="projects-track">{projects}
       <div class="projects-end">
-        <h3 class="display d-m">Your project<br>could be next.</h3>
+        <h3 class="display d-m">Ihr Projekt<br>ist das nächste.</h3>
         <a class="btn btn--solid" href="{p.url("offerte/")}" data-magnetic=".3">Projekt starten {ARROW}</a>
       </div>
     </div>
@@ -378,18 +385,18 @@ def home():
 <section class="process section">
   <div class="wrap process-grid">
     <div>
-      <span class="eyebrow">Our process</span>
-      <h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Simple.")}</h2>
+      <span class="eyebrow">Unser Ablauf</span>
+      <h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Einfach.")}</h2>
     </div>
     <div class="process-steps"><div class="process-line"><i></i></div>{steps}
     </div>
   </div>
 </section>
 
-{marquee(["We make you visible", "Rorschach", "Switzerland", "Since day one: WOW"], pink=True, reverse=True)}
+{marquee(["Wir machen Sie sichtbar", "Rorschach", "Schweiz", "Seit Tag eins: WOW"], pink=True, reverse=True)}
 {cta_band(p)}
 """
-    write(p, layout(p, "WOW PRINT – We make you visible. | Werbetechnik Rorschach",
+    write(p, layout(p, "WOW PRINT – Wir machen Sie sichtbar. | Werbetechnik Rorschach",
                     "WOW PRINT aus Rorschach: Fahrzeugbeschriftung, Schaufenster, Textildruck, Print, Schilder, Design und Websites. Alles aus einer Hand.", body))
 
 
@@ -403,7 +410,7 @@ def services_overview():
       <span class="circle">{ARROW}</span>
     </a>""" for s in SERVICES)
     body = f"""
-{page_hero(p, "Services", ["What", "we do."], "Sieben Disziplinen unter einem Dach. Wir gestalten, produzieren und montieren und machen Ihre Marke überall sichtbar, wo man sie sehen soll.", [("", "Home"), (None, "Services")])}
+{page_hero(p, "Leistungen", ["Was wir", "machen."], "Sieben Disziplinen unter einem Dach. Wir gestalten, produzieren und montieren und machen Ihre Marke überall sichtbar, wo man sie sehen soll.", [("", "Start"), (None, "Leistungen")])}
 <section class="section">
   <div class="wrap">
     <div class="svc-list">{rows}
@@ -411,10 +418,10 @@ def services_overview():
   </div>
   <div class="hover-img" aria-hidden="true"><img src="" alt=""></div>
 </section>
-{marquee(["Design", "Print", "Plot", "Produce", "Install", "Wow"])}
+{marquee(["Design", "Druck", "Plot", "Produktion", "Montage", "Wow"])}
 <section class="process section">
   <div class="wrap process-grid">
-    <div><span class="eyebrow">Our process</span><h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Simple.")}</h2></div>
+    <div><span class="eyebrow">Unser Ablauf</span><h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Einfach.")}</h2></div>
     <div class="process-steps"><div class="process-line"><i></i></div>{"".join(f'<div class="step{" step--wow" if n == "04" else ""}"><span class="num">{n}</span><h3 class="display">{t}</h3><p>{d}</p></div>' for n, t, d in PROCESS)}</div>
   </div>
 </section>
@@ -434,22 +441,22 @@ def service_page(i, s):
         ba = f"""
 <section class="section section--tight">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">Before / After</span><h2 class="display d-l" data-lines>{lines("Same car.", "New story.")}</h2><p class="muted">Ziehen Sie den Regler und sehen Sie, was eine Folierung aus einem Fahrzeug macht.</p></div>
+    <div class="section-head"><span class="eyebrow">Vorher / Nachher</span><h2 class="display d-l" data-lines>{lines("Gleiches Auto.", "Neuer Auftritt.")}</h2><p class="muted">Ziehen Sie den Regler und sehen Sie, was eine Folierung aus einem Fahrzeug macht.</p></div>
     <div class="ba" data-reveal>
       {img(p, "vehicle-after.jpg", "Fahrzeug nach der Folierung")}
       <img class="ba-before" src="{p.asset("img/vehicle-before.jpg")}" alt="Fahrzeug vor der Folierung" loading="lazy">
-      <span class="ba-label ba-label--l">Before</span><span class="ba-label ba-label--r">After</span>
+      <span class="ba-label ba-label--l">Vorher</span><span class="ba-label ba-label--r">Nachher</span>
       <div class="ba-handle"></div>
       <input type="range" min="0" max="100" value="50" aria-label="Vorher-Nachher-Vergleich">
     </div>
   </div>
 </section>"""
     body = f"""
-{page_hero(p, s["sub"], [s["title"] + "."], s["short"], [("", "Home"), ("leistungen/", "Services"), (None, s["title"])], bg_num=s["num"])}
+{page_hero(p, s["sub"], [s["title"] + "."], s["short"], [("", "Start"), ("leistungen/", "Leistungen"), (None, s["title"])], bg_num=s["num"])}
 <div class="media-band">{img(p, s["img"], s["title"] + " – " + s["sub"], 'data-parallax=".25"')}</div>
 <section class="section">
   <div class="wrap split">
-    <div><span class="eyebrow">{s["num"]} — {s["sub"]}</span><h2 class="display d-m" style="margin-top:18px" data-lines>{lines("Make it", "impossible", "to ignore.")}</h2></div>
+    <div><span class="eyebrow">{s["num"]} — {s["sub"]}</span><h2 class="display d-m" style="margin-top:18px" data-lines>{lines("Nicht zu", "übersehen.")}</h2></div>
     <div class="prose" data-reveal>{"".join(f"<p>{t}</p>" for t in s["intro"])}
       <a class="btn btn--solid" href="{p.url("offerte/")}?leistung={s["key"]}" data-magnetic=".3" style="margin-top:14px">Offerte für {s["title"]} {ARROW}</a>
     </div>
@@ -457,30 +464,30 @@ def service_page(i, s):
 </section>
 <section class="section section--tight" style="padding-top:0">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">What we offer</span><h2 class="display d-l" data-lines>{lines("Our scope.")}</h2></div>
+    <div class="section-head"><span class="eyebrow">Angebot</span><h2 class="display d-l" data-lines>{lines("Unser Angebot.")}</h2></div>
     <ul class="offer-list">{offers}</ul>
   </div>
 </section>
 {ba}
 <section class="section bg-ink on-dark">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow" style="color:var(--pink)">Why WOW</span><h2 class="display d-l" data-lines>{lines("Why us.")}</h2></div>
+    <div class="section-head"><span class="eyebrow" style="color:var(--pink)">Warum WOW</span><h2 class="display d-l" data-lines>{lines("Warum wir.")}</h2></div>
     <div class="cards-3">{why}</div>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">Gallery</span><h2 class="display d-l" data-lines>{lines("In action.")}</h2></div>
+    <div class="section-head"><span class="eyebrow">Galerie</span><h2 class="display d-l" data-lines>{lines("Im Einsatz.")}</h2></div>
     <div class="gallery gallery--steps">{gallery_steps(p, s)}</div>
   </div>
 </section>
 <section class="section bg-paper2">
   <div class="wrap split">
-    <div><span class="eyebrow">FAQ</span><h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Good", "questions.")}</h2></div>
+    <div><span class="eyebrow">FAQ</span><h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Gute", "Fragen.")}</h2></div>
     <div class="faq">{faq}</div>
   </div>
 </section>
-<div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Next"><div class="wrap"><span class="eyebrow">Next service · {nxt["num"]}</span><span class="display d-xl">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
+<div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
 {cta_band(p)}
 """
     write(p, layout(p, f"{s['title']} – {s['sub']} | WOW PRINT Rorschach", s["short"], body, current="leistungen/", og_img=s["img"]))
@@ -496,7 +503,7 @@ def projects_page():
         <div class="info"><h3 class="display">{pr["title"]}</h3><small>{pr["meta"]} · {pr["label"]}</small></div>
       </article>""" for pr in PROJECTS)
     body = f"""
-{page_hero(p, "Selected work", ["Projects."], "Eine Auswahl unserer Arbeiten: Fahrzeuge, Schaufenster, Textilien, Print und mehr. Jedes Projekt mit dem Ziel, aufzufallen.", [("", "Home"), (None, "Work")])}
+{page_hero(p, "Ausgewählte Arbeiten", ["Projekte."], "Eine Auswahl unserer Arbeiten: Fahrzeuge, Schaufenster, Textilien, Print und mehr. Jedes Projekt mit dem Ziel, aufzufallen.", [("", "Start"), (None, "Projekte")])}
 <section class="section">
   <div class="wrap">
     <div class="filters" role="group" aria-label="Projekte filtern">{chips}</div>
@@ -505,7 +512,7 @@ def projects_page():
     <p class="note">Hinweis: Die gezeigten Projekte sind Platzhalter und werden durch echte Referenzen ersetzt.</p>
   </div>
 </section>
-{cta_band(p, ("Your project", "could be next."))}
+{cta_band(p, ("Ihr Projekt", "ist das nächste."))}
 """
     write(p, layout(p, "Projects – WOW PRINT", "Ausgewählte Projekte von WOW PRINT: Fahrzeugfolierungen, Schaufenster, Textil, Print und Design.", body, current="projekte/"))
 
@@ -513,7 +520,7 @@ def projects_page():
 def about_page():
     p = Page("ueber-uns/")
     body = f"""
-{page_hero(p, "About", ["We are", "different."], "Kein Standard, kein Copy-Paste. WOW PRINT ist für alle, die mit ihrem Auftritt auffallen wollen.", [("", "Home"), (None, "About")])}
+{page_hero(p, "Über uns", ["Wir sind", "anders."], "Kein Standard, kein Copy-Paste. WOW PRINT ist für alle, die mit ihrem Auftritt auffallen wollen.", [("", "Start"), (None, "Über uns")])}
 <section class="section">
   <div class="wrap split">
     <div><span class="eyebrow">Manifest</span></div>
@@ -526,27 +533,27 @@ def about_page():
 </section>
 <section class="duo">
   <div class="it">
-    <span class="eyebrow">Design with character.</span>
-    <h2 class="display d-xl" data-lines>{lines("The art", "of design.")}</h2>
+    <span class="eyebrow">Design mit Charakter.</span>
+    <h2 class="display d-xl" data-lines>{lines("Die Kunst", "des Designs.")}</h2>
     <p>Gespür für Ästhetik, Proportion und Stil. Wir glauben, dass gutes Design Emotionen auslöst und dass auch Werbetechnik schön sein darf.</p>
   </div>
   <div class="ch on-dark">
-    <span class="eyebrow" style="color:var(--pink)">Swiss made</span>
-    <h2 class="display d-xl" data-lines>{lines("Swiss", "precision.")}</h2>
+    <span class="eyebrow" style="color:var(--pink)">Schweizer Qualität</span>
+    <h2 class="display d-xl" data-lines>{lines("Schweizer", "Präzision.")}</h2>
     <p class="muted">Sauber geplant, exakt produziert, pünktlich montiert. Auf uns ist Verlass, bis in die letzte Folienkante.</p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">Values</span><h2 class="display d-l" data-lines>{lines("What drives us.")}</h2></div>
+    <div class="section-head"><span class="eyebrow">Werte</span><h2 class="display d-l" data-lines>{lines("Was uns antreibt.")}</h2></div>
     <div class="values">
-      <div class="value" data-reveal><span class="num">01</span><h3 class="display">Bold.</h3><p>Wir trauen uns, aufzufallen, und bringen Ideen ein, auf die andere nicht kommen.</p></div>
-      <div class="value" data-reveal><span class="num">02</span><h3 class="display">Precise.</h3><p>Hinter jedem WOW steckt Handwerk: genaue Planung, gute Materialien, saubere Arbeit.</p></div>
-      <div class="value" data-reveal><span class="num">03</span><h3 class="display">Personal.</h3><p>Ein Ansprechpartner, kurze Wege, ehrliche Beratung. Wir nehmen uns Zeit für Ihr Projekt.</p></div>
+      <div class="value" data-reveal><span class="num">01</span><h3 class="display">Mutig.</h3><p>Wir trauen uns, aufzufallen, und bringen Ideen ein, auf die andere nicht kommen.</p></div>
+      <div class="value" data-reveal><span class="num">02</span><h3 class="display">Präzise.</h3><p>Hinter jedem WOW steckt Handwerk: genaue Planung, gute Materialien, saubere Arbeit.</p></div>
+      <div class="value" data-reveal><span class="num">03</span><h3 class="display">Persönlich.</h3><p>Ein Ansprechpartner, kurze Wege, ehrliche Beratung. Wir nehmen uns Zeit für Ihr Projekt.</p></div>
     </div>
   </div>
 </section>
-{marquee(["Design", "Print", "Plot", "Produce", "Install", "All in one house"], pink=True)}
+{marquee(["Design", "Druck", "Plot", "Produktion", "Montage", "Alles aus einer Hand"], pink=True)}
 <section class="section bg-ink on-dark">
   <div class="wrap split">
     <div><span class="eyebrow" style="color:var(--pink)">Rorschach · Bodensee</span></div>
@@ -565,7 +572,7 @@ def about_page():
 def contact_page():
     p = Page("kontakt/")
     body = f"""
-{page_hero(p, "Contact", ["Let’s talk."], "Sie haben eine Idee, ein Projekt oder einfach eine Frage? Schreiben Sie uns, rufen Sie an oder kommen Sie vorbei.", [("", "Home"), (None, "Contact")])}
+{page_hero(p, "Kontakt", ["Reden wir."], "Sie haben eine Idee, ein Projekt oder einfach eine Frage? Schreiben Sie uns, rufen Sie an oder kommen Sie vorbei.", [("", "Start"), (None, "Kontakt")])}
 <section class="section">
   <div class="wrap contact-layout">
     <div class="contact-info">
@@ -576,7 +583,7 @@ def contact_page():
       <div><h4>SOCIAL</h4>{socials()}</div>
     </div>
     <div>
-      <h2 class="display d-m" data-lines>{lines("Write us.")}</h2>
+      <h2 class="display d-m" data-lines>{lines("Schreiben Sie uns.")}</h2>
       <p class="muted" style="margin:14px 0 36px">Für eine konkrete Offerte mit Dateien nutzen Sie am besten unser <a class="link-u" style="color:var(--ink)" href="{p.url("offerte/")}">Offertenformular</a>.</p>
       <form name="kontakt" method="POST" action="{p.form_action("danke/")}" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="kontakt">
@@ -604,7 +611,7 @@ def quote_page():
     p = Page("offerte/")
     choices = "".join(f"""
           <label class="choice"><input type="checkbox" name="leistung[]" value="{s["key"]}"><span><em>{s["num"]}</em><b>{s["title"]}</b><small>{s["sub"]}</small></span></label>""" for s in SERVICES)
-    choices += '<label class="choice"><input type="checkbox" name="leistung[]" value="anderes"><span><em>08</em><b>Other</b><small>Etwas anderes oder noch unklar</small></span></label>'
+    choices += '<label class="choice"><input type="checkbox" name="leistung[]" value="anderes"><span><em>08</em><b>Anderes</b><small>Etwas anderes oder noch unklar</small></span></label>'
 
     def radio_group(name, opts):
         return "".join(f'<label class="choice"><input type="radio" name="{name}" value="{o}"{" required" if k == 0 else ""}><span><b>{o}</b></span></label>' for k, o in enumerate(opts))
@@ -613,7 +620,7 @@ def quote_page():
         return f"""<label class="dropzone"><input type="file" name="datei{n}" accept=".pdf,.ai,.eps,.svg,.png,.jpg,.jpeg,.heic,.zip"><span class="dz-ico">{UPLOAD}</span><span><strong>{label}</strong><small>PDF, AI, EPS, SVG, JPG, PNG oder ZIP</small></span></label>"""
 
     body = f"""
-{page_hero(p, "Get a quote", ["Let’s make", "it wow."], "In vier kurzen Schritten zur unverbindlichen Offerte. Wir melden uns innert zwei Arbeitstagen bei Ihnen.", [("", "Home"), (None, "Offerte")])}
+{page_hero(p, "Offerte", ["Machen wir", "es WOW."], "In vier kurzen Schritten zur unverbindlichen Offerte. Wir melden uns innert zwei Arbeitstagen bei Ihnen.", [("", "Start"), (None, "Offerte")])}
 <section class="section">
   <div class="wrap" style="max-width:1100px">
     <form class="wizard" name="offerte" method="POST" action="{p.form_action("danke/")}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" novalidate>
@@ -622,13 +629,13 @@ def quote_page():
       <ol class="wizard-progress" aria-hidden="true"><li><span>01 Leistung</span></li><li><span>02 Projekt</span></li><li><span>03 Dateien</span></li><li><span>04 Kontakt</span></li></ol>
 
       <fieldset data-require-one>
-        <legend><span class="eyebrow">Schritt 1 von 4</span><h2 class="display d-m" style="margin-top:14px">What do you need?</h2></legend>
+        <legend><span class="eyebrow">Schritt 1 von 4</span><h2 class="display d-m" style="margin-top:14px">Was brauchen Sie?</h2></legend>
         <div class="choice-grid">{choices}
         </div>
       </fieldset>
 
       <fieldset>
-        <legend><span class="eyebrow">Schritt 2 von 4</span><h2 class="display d-m" style="margin-top:14px">Tell us more.</h2></legend>
+        <legend><span class="eyebrow">Schritt 2 von 4</span><h2 class="display d-m" style="margin-top:14px">Erzählen Sie mehr.</h2></legend>
         <div class="form-grid">
           <div class="field full"><label for="o-desc">Projektbeschreibung</label><textarea id="o-desc" name="beschreibung" required placeholder="Was soll entstehen? Z. B. Fahrzeugmodell, Fläche, Anzahl Shirts, Wunschtexte …"></textarea></div>
           <div class="field"><label for="o-menge">Menge / Masse <span class="opt">(optional)</span></label><input id="o-menge" name="menge" placeholder="z. B. 3 Fahrzeuge, 2 × 1.5 m, 50 Stück"></div>
@@ -643,13 +650,13 @@ def quote_page():
       </fieldset>
 
       <fieldset>
-        <legend><span class="eyebrow">Schritt 3 von 4</span><h2 class="display d-m" style="margin-top:14px">Upload files.</h2></legend>
+        <legend><span class="eyebrow">Schritt 3 von 4</span><h2 class="display d-m" style="margin-top:14px">Dateien hochladen.</h2></legend>
         <p class="muted" style="margin:-10px 0 24px">Logo, Druckdaten, Fotos vom Fahrzeug oder Schaufenster, Skizzen. Alles hilft. Optional, max. 8 MB insgesamt.</p>
         <div class="uploads">{dz(1, "Datei 1 hochladen")}{dz(2, "Datei 2 hochladen")}{dz(3, "Datei 3 hochladen")}</div>
       </fieldset>
 
       <fieldset>
-        <legend><span class="eyebrow">Schritt 4 von 4</span><h2 class="display d-m" style="margin-top:14px">Almost wow.</h2></legend>
+        <legend><span class="eyebrow">Schritt 4 von 4</span><h2 class="display d-m" style="margin-top:14px">Fast geschafft.</h2></legend>
         <div class="form-grid">
           <div class="field"><label for="o-name">Vorname & Name</label><input id="o-name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="o-firma">Firma <span class="opt">(optional)</span></label><input id="o-firma" name="firma" autocomplete="organization"></div>
@@ -682,7 +689,7 @@ def thanks_page():
 <section class="center-stage">
   <div class="hero-bgword" aria-hidden="true">WOW</div>
   <div style="position:relative">
-    <span class="eyebrow">Message received</span>
+    <span class="eyebrow">Nachricht erhalten</span>
     <h1 class="display d-xxl" style="margin-top:20px">{lines("Wow!")}</h1>
     <p>Danke für Ihre Anfrage. Wir melden uns innert zwei Arbeitstagen bei Ihnen. Bis bald!</p>
     <a class="btn btn--solid" href="{p.url("")}" data-magnetic=".3">Zur Startseite {ARROW}</a>
@@ -697,8 +704,8 @@ def not_found():
 <section class="center-stage">
   <div class="hero-bgword" aria-hidden="true">404</div>
   <div style="position:relative">
-    <span class="eyebrow">Error 404</span>
-    <h1 class="display d-xxl" style="margin-top:20px">{lines("Oops.")}</h1>
+    <span class="eyebrow">Fehler 404</span>
+    <h1 class="display d-xxl" style="margin-top:20px">{lines("Hoppla.")}</h1>
     <p>Diese Seite ist leider nicht sichtbar. Ausnahmsweise. Alles andere finden Sie hier:</p>
     <a class="btn btn--solid" href="{p.url("")}" data-magnetic=".3">Zur Startseite {ARROW}</a>
   </div>
@@ -709,7 +716,7 @@ def not_found():
 def legal_page(slug, eyebrow, title, desc, inner):
     p = Page(slug + "/")
     body = f"""
-{page_hero(p, eyebrow, [title], "", [("", "Home"), (None, eyebrow)])}
+{page_hero(p, eyebrow, [title], "", [("", "Start"), (None, eyebrow)])}
 <section class="section">
   <div class="wrap"><div class="legal">{inner(p)}</div></div>
 </section>"""
@@ -731,9 +738,9 @@ def main():
     quote_page()
     thanks_page()
     not_found()
-    legal_page("impressum", "Impressum", "Imprint.", "Impressum von WOW PRINT, Rorschach.", impressum)
-    legal_page("datenschutz", "Datenschutz", "Privacy.", "Datenschutzerklärung von WOW PRINT nach Schweizer Datenschutzgesetz (DSG).", datenschutz)
-    legal_page("agb", "AGB", "Terms.", "Allgemeine Geschäftsbedingungen von WOW PRINT.", agb)
+    legal_page("impressum", "Impressum", "Impressum.", "Impressum von WOW PRINT, Rorschach.", impressum)
+    legal_page("datenschutz", "Datenschutz", "Datenschutz.", "Datenschutzerklärung von WOW PRINT nach Schweizer Datenschutzgesetz (DSG).", datenschutz)
+    legal_page("agb", "AGB", "AGB.", "Allgemeine Geschäftsbedingungen von WOW PRINT.", agb)
     print("Fertig.")
 
 

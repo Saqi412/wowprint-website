@@ -21,7 +21,7 @@ HOURS = [("Mo – Fr", "0900 – 1200"), ("", "1400 – 1700")]
 
 SERVICES = [
     {
-        "slug": "fahrzeugbeschriftung", "key": "vehicle", "num": "01", "title": "Vehicle",
+        "slug": "fahrzeugbeschriftung", "key": "vehicle", "num": "01", "title": "Fahrzeuge",
         "sub": "Fahrzeugbeschriftung & Folierung", "img": "service-vehicle.jpg",
         "short": "Vom Firmenauto bis zur ganzen Flotte: Beschriftung, Teil- und Vollfolierung, die man nicht übersieht.",
         "intro": [
@@ -49,7 +49,7 @@ SERVICES = [
         "before_after": True,
     },
     {
-        "slug": "schaufenster", "key": "windows", "num": "02", "title": "Windows",
+        "slug": "schaufenster", "key": "windows", "num": "02", "title": "Schaufenster",
         "sub": "Schaufenster & Sichtschutz", "img": "service-windows.jpg",
         "short": "Schaufenster, die stoppen. Sichtschutz, der gut aussieht. Glasflächen, die für Sie arbeiten.",
         "intro": [
@@ -74,7 +74,7 @@ SERVICES = [
         ],
     },
     {
-        "slug": "textildruck", "key": "textile", "num": "03", "title": "Textile",
+        "slug": "textildruck", "key": "textile", "num": "03", "title": "Textil",
         "sub": "Textildruck & Veredelung", "img": "service-textile.jpg",
         "short": "Workwear, Teamwear und Merch, die man gerne trägt. Bedruckt oder bestickt.",
         "intro": [
@@ -99,7 +99,7 @@ SERVICES = [
         ],
     },
     {
-        "slug": "print", "key": "print", "num": "04", "title": "Print",
+        "slug": "print", "key": "print", "num": "04", "title": "Druck",
         "sub": "Sticker · Folien · Printmedien", "img": "service-print.jpg",
         "short": "Sticker, Etiketten, Flyer, Plakate und Folien. Gedruckt, geplottet, geschnitten.",
         "intro": [
@@ -124,7 +124,7 @@ SERVICES = [
         ],
     },
     {
-        "slug": "signaletik", "key": "signage", "num": "05", "title": "Signage",
+        "slug": "signaletik", "key": "signage", "num": "05", "title": "Schilder",
         "sub": "Schilder & Werbetafeln", "img": "service-signage.jpg",
         "short": "Firmenschilder, Werbetafeln und Wegweiser. Damit man Sie findet und sich an Sie erinnert.",
         "intro": [
@@ -201,17 +201,17 @@ SERVICES = [
 ]
 
 PROJECTS = [
-    {"title": "Vehicle Branding", "cat": "vehicle", "label": "Vehicle", "meta": "Project 001 — 2026", "img": "project-vehicle.jpg"},
-    {"title": "Window Graphics", "cat": "windows", "label": "Windows", "meta": "Project 002 — 2026", "img": "project-windows.jpg"},
-    {"title": "Textile", "cat": "textile", "label": "Textile", "meta": "Project 003 — 2026", "img": "project-textile.jpg"},
-    {"title": "Printmedia", "cat": "print", "label": "Print", "meta": "Project 004 — 2026", "img": "project-print.jpg"},
-    {"title": "Store Signage", "cat": "signage", "label": "Signage", "meta": "Project 005 — 2026", "img": "service-signage.jpg"},
-    {"title": "Web Presence", "cat": "digital", "label": "Digital", "meta": "Project 006 — 2026", "img": "service-digital.jpg"},
+    {"title": "Fahrzeugbranding", "cat": "vehicle", "label": "Fahrzeuge", "meta": "Projekt 001 — 2026", "img": "project-vehicle.jpg"},
+    {"title": "Schaufenstergrafik", "cat": "windows", "label": "Schaufenster", "meta": "Projekt 002 — 2026", "img": "project-windows.jpg"},
+    {"title": "Textil", "cat": "textile", "label": "Textil", "meta": "Projekt 003 — 2026", "img": "project-textile.jpg"},
+    {"title": "Printmedien", "cat": "print", "label": "Druck", "meta": "Projekt 004 — 2026", "img": "project-print.jpg"},
+    {"title": "Ladenbeschilderung", "cat": "signage", "label": "Schilder", "meta": "Projekt 005 — 2026", "img": "service-signage.jpg"},
+    {"title": "Webauftritt", "cat": "digital", "label": "Digital", "meta": "Projekt 006 — 2026", "img": "service-digital.jpg"},
 ]
 
 PROCESS = [
-    ("01", "Talk", "Erzählen Sie uns, was Sie brauchen. Persönlich, am Telefon oder per Offerte."),
-    ("02", "Create", "Wir entwickeln das Design und zeigen Ihnen Entwürfe, bis es passt."),
-    ("03", "Make", "Wir drucken, plotten, produzieren und montieren. Alles im eigenen Haus."),
+    ("01", "Gespräch", "Erzählen Sie uns, was Sie brauchen. Persönlich, am Telefon oder per Offerte."),
+    ("02", "Entwurf", "Wir entwickeln das Design und zeigen Ihnen Entwürfe, bis es passt."),
+    ("03", "Produktion", "Wir drucken, plotten, produzieren und montieren. Alles im eigenen Haus."),
     ("04", "Wow", "Bereit, gesehen zu werden. Ihr Auftritt ist da und fällt auf."),
 ]
