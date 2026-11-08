@@ -749,3 +749,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .services-intro h2.d-l, .process-grid h2 { font-size: clamp(40px, 3.9vw, 66px); }
 @media (max-width: 1180px) { .services-intro h2.d-l { font-size: clamp(40px, 7vw, 96px); } }
 @media (max-width: 960px) { .process-grid h2 { font-size: clamp(40px, 9vw, 80px); } }
+
+/* Runde Punkte wie im Logo (Archivo-Punkt ist eckig) */
+.dot { display: inline-block; width: .2em; height: .2em; margin-left: .03em; border-radius: 50%; background: currentColor; vertical-align: baseline; }
+.outline-text .dot, .cta-title .fill .dot { background: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.statement-claim .dot { margin-left: .04em; }
+/* Banner: Stern auch nach Kontur-Wörtern sichtbar */
+.marquee-item.is-outline .star { color: var(--pink); }
+.marquee--pink .marquee-item.is-outline .star { color: var(--ink); }

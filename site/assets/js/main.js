@@ -46,6 +46,9 @@
         });
       } else if (node.nodeName === 'BR') {
         out += '<br>';
+      } else if (node.classList && node.classList.contains('dot') && /<\/span><\/span>$/.test(out)) {
+        // runder Punkt bleibt am vorherigen Wort
+        out = out.slice(0, -14) + node.outerHTML + '</span></span>';
       } else {
         out += '<span class="word"><span>' + node.outerHTML + '</span></span>';
       }
@@ -348,7 +351,8 @@
       var spans = el.children;
       if (!spans.length) return;
       el.style.fontSize = '100px';
-      var w = spans[spans.length - 1].getBoundingClientRect().right - spans[0].getBoundingClientRect().left;
+      // + negatives letter-spacing (-.065em) des letzten Buchstabens, sonst wird das T abgeschnitten
+      var w = spans[spans.length - 1].getBoundingClientRect().right - spans[0].getBoundingClientRect().left + 100 * 0.065 + 2;
       var cs = getComputedStyle(el), box = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       if (w > 0 && box > 0) el.style.fontSize = (100 * box / w * 0.99) + 'px';
     });

@@ -5,7 +5,7 @@
     python3 tools/build.py --preview  # Links auf index.html, für lokale Vorschau
 """
 import hashlib
-import os
+import os, re
 import sys
 from html import escape
 
@@ -193,7 +193,7 @@ def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
     return f"""
 <section class="cta-band section">
   <div class="wrap">
-    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2)}">{l2}</span></span></span></h2>
+    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2.rstrip("."))}">{l2.rstrip(".")}</span>{DOT if l2.endswith(".") else ""}</span></span></h2>
     <div class="cta-side">
       <p>Haben Sie ein Projekt?</p>
       <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Kontakt aufnehmen {ARROW}</a>
@@ -272,7 +272,20 @@ def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=No
 """
 
 
+DOT = '<span class="dot" aria-hidden="true"></span>'
+_HEAD = re.compile(r"(<(h1|h2)\b[^>]*>)(.*?)(</\2>)", re.S)
+
+
+def round_dots(html):
+    """Punkte in Überschriften rund wie im Logo (Archivo hat eckige Punkte)."""
+    def fix_inner(inner):
+        parts = re.split(r"(<[^>]+>)", inner)
+        return "".join(x if x.startswith("<") else x.replace(".", DOT) for x in parts)
+    return _HEAD.sub(lambda m: m.group(1) + fix_inner(m.group(3)) + m.group(4), html)
+
+
 def write(p, html):
+    html = round_dots(html)
     path = os.path.join(OUT, p.path, "index.html") if not p.path.endswith(".html") else os.path.join(OUT, p.path)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -360,7 +373,7 @@ def home():
     <span class="eyebrow" style="color:var(--pink)">Anders aus Prinzip</span>
     <p class="statement-text">Wir sind keine 0815-Agentur. Wir sind <em>kreative Artisten</em> mit einem Gespür für Ästhetik, einem Auge fürs Detail und der Leidenschaft, aus jeder Marke <em>etwas Einzigartiges</em> zu machen.</p>
     <div class="statement-foot">
-      <p class="statement-claim"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>Werbung können viele. Kunst nicht!</p>
+      <p class="statement-claim"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Werbung können viele<span class="dot"></span> Kunst nicht<span class="dot"></span><span class="dot"></span><span class="dot"></span></span></p>
       <a class="btn btn--light" href="{p.url("ueber-uns/")}" data-magnetic=".3">Über uns {ARROW}</a>
     </div>
   </div>
