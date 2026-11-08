@@ -205,7 +205,7 @@ PROJECTS = [
     {"title": "Schaufenstergrafik", "cat": "windows", "label": "Schaufenster", "meta": "Projekt 002 — 2026", "img": "project-windows.jpg"},
     {"title": "Textil", "cat": "textile", "label": "Textil", "meta": "Projekt 003 — 2026", "img": "project-textile.jpg"},
     {"title": "Printmedien", "cat": "print", "label": "Druck", "meta": "Projekt 004 — 2026", "img": "project-print.jpg"},
-    {"title": "Ladenbeschilderung", "cat": "signage", "label": "Schilder", "meta": "Projekt 005 — 2026", "img": "service-signage.jpg"},
+    {"title": "Ladenbeschilderung", "cat": "signage", "label": "Schilder", "meta": "Projekt 005 — 2026", "img": "project-signage.jpg"},
     {"title": "Webauftritt", "cat": "digital", "label": "Digital", "meta": "Projekt 006 — 2026", "img": "service-digital.jpg"},
 ]
 
