@@ -332,7 +332,7 @@ def home():
   <div class="hero-bgword" aria-hidden="true">WOW</div>
   <div class="hero-media">{img(p, "hero-car.jpg", "Sportwagen in Rosa, foliert mit WOW-Schriftzug", 'fetchpriority="high" loading="eager"')}</div>
   <div class="wrap hero-content">
-    <h1 class="display">{lines("Wir machen", "Sie sichtbar.")}</h1>
+    <h1 class="display">{lines("Wir machen", "Sie WOW.")}</h1>
     <div class="hero-bottom">
       <p class="lead">Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. Für Marken, die nicht wie alle anderen aussehen wollen.</p>
       <a class="scroll-cue" href="#services">Scrollen {ARROW_DOWN}</a>
