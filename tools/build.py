@@ -188,12 +188,20 @@ def footer(p):
 """
 
 
+def fill_text(t):
+    """Runder Punkt im Fill-Titel: bleibt mit dem letzten Wort auf derselben Zeile."""
+    if not t.endswith("."):
+        return t
+    head, _, last = t.rstrip(".").rpartition(" ")
+    return (head + " " if head else "") + f'<span class="nowrap">{last}{DOT}</span>'
+
+
 def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
     l1, l2 = title_lines
     return f"""
 <section class="cta-band section">
   <div class="wrap">
-    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2.rstrip("."))}">{l2.rstrip(".")}</span>{DOT if l2.endswith(".") else ""}</span></span></h2>
+    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2.rstrip("."))}">{fill_text(l2)}</span></span></span></h2>
     <div class="cta-side">
       <p>Haben Sie ein Projekt?</p>
       <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Kontakt aufnehmen {ARROW}</a>
@@ -206,7 +214,7 @@ def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
 def fit_style(title_lines, vw=11.0):
     """Lange deutsche Wörter (z. B. SCHAUFENSTER.) passen sonst nicht in die Breite."""
     longest = max(len(t) for t in title_lines)
-    size = min(vw, 84 / (longest * 0.74))
+    size = min(vw, 82 / (longest * 0.82))
     return "" if size >= vw else f' style="font-size:clamp(34px, {size:.2f}vw, 190px)"'
 
 
@@ -273,6 +281,7 @@ def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=No
 
 
 DOT = '<span class="dot" aria-hidden="true"></span>'
+_UML = re.compile(r"[ÄÖÜäöü]")
 _HEAD = re.compile(r"(<(h1|h2)\b[^>]*>)(.*?)(</\2>)", re.S)
 
 
@@ -281,7 +290,19 @@ def round_dots(html):
     def fix_inner(inner):
         parts = re.split(r"(<[^>]+>)", inner)
         return "".join(x if x.startswith("<") else x.replace(".", DOT) for x in parts)
-    return _HEAD.sub(lambda m: m.group(1) + fix_inner(m.group(3)) + m.group(4), html)
+    def mark_uml(m):
+        open_tag, inner = m.group(1), fix_inner(m.group(3))
+        if not _UML.search(re.sub(r"<[^>]+>", "", inner)):
+            return open_tag + inner + m.group(4)
+        if 'class="line"' in inner:
+            # nur die Zeile mit Umlaut bekommt mehr Luft nach oben
+            inner = re.sub(r'<span class="line">(<span>(?:(?!<span class="line">).)*?[ÄÖÜäöü])',
+                           r'<span class="line uml">\1', inner, flags=re.S)
+        else:
+            open_tag = (open_tag.replace('class="', 'class="uml ', 1) if 'class="' in open_tag
+                        else open_tag[:-1] + ' class="uml">')
+        return open_tag + inner + m.group(4)
+    return _HEAD.sub(mark_uml, html)
 
 
 def write(p, html):
@@ -500,7 +521,7 @@ def service_page(i, s):
     <div class="faq">{faq}</div>
   </div>
 </section>
-<div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
+<div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl" style="font-size:clamp(30px, {min(8.4, 80 / (len(nxt["title"]) * 0.82 + 0.9)):.2f}vw, 148px)">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
 {cta_band(p)}
 """
     write(p, layout(p, f"{s['title']} – {s['sub']} | WOW PRINT Rorschach", s["short"], body, current="leistungen/", og_img=s["img"]))

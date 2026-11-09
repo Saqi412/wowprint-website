@@ -259,7 +259,9 @@
 
     // CTA Fill
     $$('.cta-title .fill').forEach(function (el) {
-      gsap.fromTo(el, { '--fill': '0%' }, { '--fill': '100%', ease: 'none', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 45%', scrub: true } });
+      var dot = el.querySelector('.dot');
+      gsap.fromTo(el, { '--fill': '0%' }, { '--fill': '100%', ease: 'none', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 45%', scrub: true,
+        onUpdate: function (st) { if (dot) dot.classList.toggle('is-empty', st.progress < .98); } } });
     });
 
     // Horizontale Projekte
@@ -360,6 +362,10 @@
   fitGiant();
   window.addEventListener('resize', fitGiant);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitGiant);
+  // iOS: Archivo lädt evtl. erst später -> nach dem Laden nochmals messen
+  window.addEventListener('load', fitGiant);
+  if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitGiant);
+  setTimeout(fitGiant, 1500);
 
   /* ---------- Öffnungszeiten-Status ---------- */
   function openStatus() {
