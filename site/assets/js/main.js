@@ -259,9 +259,7 @@
 
     // CTA Fill
     $$('.cta-title .fill').forEach(function (el) {
-      var dot = el.querySelector('.dot');
-      gsap.fromTo(el, { '--fill': '0%' }, { '--fill': '100%', ease: 'none', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 45%', scrub: true,
-        onUpdate: function (st) { if (dot) dot.classList.toggle('is-empty', st.progress < .98); } } });
+      gsap.fromTo(el, { '--fill': '0%' }, { '--fill': '100%', ease: 'none', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 45%', scrub: true } });
     });
 
     // Horizontale Projekte

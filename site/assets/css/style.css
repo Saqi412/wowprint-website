@@ -88,7 +88,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .display, h1, h2, h3, h4 {
   font-family: var(--f-display);
   font-weight: 900;
-  letter-spacing: -.045em;
+  letter-spacing: -.025em;
   line-height: .88;
   margin: 0;
   text-transform: uppercase;
@@ -395,12 +395,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ---------- CTA band ---------- */
 .cta-band { background: var(--pink); position: relative; overflow: hidden; }
 .cta-band .wrap { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end; }
-.cta-title { font-size: clamp(52px, 9.2vw, 168px); }
-.cta-title .fill { position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
-.cta-title .fill::after {
-  content: attr(data-text); position: absolute; inset: 0; color: var(--ink); -webkit-text-stroke: 1.5px var(--ink);
-  clip-path: inset(0 calc(100% - var(--fill, 0%)) 0 0);
-}
+.cta-title { font-size: clamp(44px, 9.2vw, 168px); }
+.cta-title .fill { position: relative; display: inline-block; }
+/* Kontur unten, gefüllte Kopie oben (identisches Markup = identischer Umbruch) */
+.cta-title .fill-base { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+.cta-title .fill-top { position: absolute; inset: 0; color: var(--ink); clip-path: inset(0 calc(100% - var(--fill, 0%)) 0 0); }
 .cta-side { display: grid; gap: 18px; justify-items: start; padding-bottom: 10px; }
 .cta-side p { margin: 0; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
 
@@ -735,7 +734,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .statement-text .w { opacity: 1 !important; }
-  .cta-title .fill { color: var(--ink); }
+  .cta-title .fill { --fill: 100%; }
 }
 
 .process-grid h2 { font-size: clamp(48px, 5.6vw, 96px); }
@@ -753,7 +752,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* Runde Punkte wie im Logo (Archivo-Punkt ist eckig) */
 .dot { display: inline-block; width: .2em; height: .2em; margin-left: .03em; border-radius: 50%; background: currentColor; vertical-align: baseline; }
-.outline-text .dot, .cta-title .fill .dot { background: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.outline-text .dot, .cta-title .fill-base .dot { background: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.cta-title .fill-top .dot { background: var(--ink); }
 .statement-claim .dot { margin-left: .04em; }
 /* Banner: Stern auch nach Kontur-Wörtern sichtbar */
 .marquee-item.is-outline .star { color: var(--pink); }
@@ -761,12 +761,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* Umlaute in Grossbuchstaben: Punkte dürfen die Zeile darüber nicht berühren */
 .line.uml { padding-top: .14em; margin-top: -.02em; line-height: 1; }
 .display.uml, h1.uml, h2.uml, h3.uml { line-height: 1; }
-.cta-title .dot { transition: background-color .25s; box-shadow: inset 0 0 0 1.5px var(--ink); }
-.cta-title .dot.is-empty { background-color: transparent; }
 
 .nowrap { white-space: nowrap; }
-.cta-title .fill .dot { background-color: var(--ink); }
-.cta-title .fill .dot.is-empty { background-color: transparent; }
 
 /* Lange deutsche Wörter in Untertiteln sauber trennen statt überlaufen */
 h3, .offer-list h3 { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }

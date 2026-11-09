@@ -206,7 +206,8 @@ PROJECTS = [
     {"title": "Textil", "cat": "textile", "label": "Textil", "meta": "Projekt 003 — 2026", "img": "project-textile.jpg"},
     {"title": "Printmedien", "cat": "print", "label": "Druck", "meta": "Projekt 004 — 2026", "img": "project-print.jpg"},
     {"title": "Ladenbeschilderung", "cat": "signage", "label": "Schilder", "meta": "Projekt 005 — 2026", "img": "project-signage.jpg"},
-    {"title": "Webauftritt", "cat": "digital", "label": "Digital", "meta": "Projekt 006 — 2026", "img": "project-digital.jpg"},
+    {"title": "Design & Entwurf", "cat": "design", "label": "Design", "meta": "Projekt 006 — 2026", "img": "project-design.jpg"},
+    {"title": "Webauftritt", "cat": "digital", "label": "Digital", "meta": "Projekt 007 — 2026", "img": "project-digital.jpg"},
 ]
 
 PROCESS = [

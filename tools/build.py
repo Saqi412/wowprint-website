@@ -201,7 +201,7 @@ def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
     return f"""
 <section class="cta-band section">
   <div class="wrap">
-    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill" data-text="{escape(l2.rstrip("."))}">{fill_text(l2)}</span></span></span></h2>
+    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill"><span class="fill-base">{fill_text(l2)}</span><span class="fill-top" aria-hidden="true">{fill_text(l2)}</span></span></span></span></h2>
     <div class="cta-side">
       <p>Haben Sie ein Projekt?</p>
       <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Kontakt aufnehmen {ARROW}</a>
@@ -214,7 +214,7 @@ def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
 def fit_style(title_lines, vw=11.0):
     """Lange deutsche Wörter (z. B. SCHAUFENSTER.) passen sonst nicht in die Breite."""
     longest = max(len(t) for t in title_lines)
-    size = min(vw, 82 / (longest * 0.82))
+    size = min(vw, 78 / (longest * 0.9))
     return "" if size >= vw else f' style="font-size:clamp(34px, {size:.2f}vw, 190px)"'
 
 
@@ -317,7 +317,7 @@ def write(p, html):
 def img(p, name, alt, extra=""):
     return f'<img src="{p.asset("img/" + name)}" alt="{escape(alt)}" loading="lazy" decoding="async" {extra}>'
 
-GALLERY_EXTRA = {"fahrzeugbeschriftung": 2}
+GALLERY_EXTRA = {}
 
 
 def gallery_steps(p, s):
