@@ -86,8 +86,7 @@ def lines(*ls):
 
 def socials():
     return (f'<div class="socials">'
-            f'<a href="{C["instagram"]}" aria-label="Instagram" data-magnetic=".4">{IG}</a>'
-            f'<a href="{C["facebook"]}" aria-label="Facebook" data-magnetic=".4">{FB}</a>'
+            f'<a href="{C["instagram"]}" aria-label="Instagram" target="_blank" rel="noopener" data-magnetic=".4">{IG}</a>'
             f'<a href="mailto:{C["email"]}" aria-label="E-Mail" data-magnetic=".4">{MAIL}</a>'
             f'<a href="tel:{C["phone_href"]}" aria-label="Telefon" data-magnetic=".4">{PHONE}</a>'
             f'</div>')
@@ -543,7 +542,6 @@ def projects_page():
     <div class="filters" role="group" aria-label="Projekte filtern">{chips}</div>
     <div class="work-grid">{cards}
     </div>
-    <p class="note">Hinweis: Die gezeigten Projekte sind Platzhalter und werden durch echte Referenzen ersetzt.</p>
   </div>
 </section>
 {cta_band(p, ("Ihr Projekt", "ist das nächste."))}

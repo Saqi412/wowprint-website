@@ -19,19 +19,19 @@ def addr():
 
 
 def impressum(p):
-    return f"""{notice()}
+    return f"""
 <h2>Kontaktadresse</h2>
-<p>{addr()}</p>
+<p>{C["legal_name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}<br>{C["country"]}</p>
 <p>Telefon: <a class="link-u" href="tel:{C["phone_href"]}">{C["phone"]}</a><br>E-Mail: <a class="link-u" href="mailto:{C["email"]}">{C["email"]}</a></p>
 
 <h2>Vertretungsberechtigte Person</h2>
-<p>[Vorname Name], Inhaber</p>
+<p>Sarah Katharina Monaci, Inhaberin (Einzelunterschrift)</p>
 
 <h2>Unternehmensangaben</h2>
-<p>Rechtsform: [Einzelunternehmen / GmbH]<br>
-Handelsregister: [Handelsregisteramt des Kantons St. Gallen]<br>
-Unternehmens-Nr. (UID): [CHE-000.000.000]<br>
-MWST-Nr.: [CHE-000.000.000 MWST]</p>
+<p>Firma: {C["legal_name"]}<br>
+Rechtsform: Einzelunternehmen<br>
+Handelsregister: Handelsregisteramt des Kantons St. Gallen<br>
+Unternehmens-Nr. (UID): {C["uid"]}</p>
 
 <h2>Haftungsausschluss</h2>
 <p>Wir prüfen die Inhalte dieser Website sorgfältig, übernehmen aber keine Gewähr für Richtigkeit, Vollständigkeit und Aktualität der Informationen. Haftungsansprüche wegen Schäden materieller oder immaterieller Art, die aus dem Zugriff auf die veröffentlichten Informationen, durch Missbrauch der Verbindung oder durch technische Störungen entstanden sind, werden ausgeschlossen, soweit gesetzlich zulässig.</p>
@@ -44,15 +44,13 @@ MWST-Nr.: [CHE-000.000.000 MWST]</p>
 <p>Die Urheber- und alle anderen Rechte an Inhalten, Bildern, Fotos oder anderen Dateien auf dieser Website gehören ausschliesslich {C["name"]} oder den speziell genannten Rechteinhabern. Für die Reproduktion jeglicher Elemente ist die schriftliche Zustimmung der Urheberrechtsträger im Voraus einzuholen.</p>
 
 <h2>Bildnachweis</h2>
-<p>Ein Teil der Bilder auf dieser Website wurde mit Hilfe von KI (Higgsfield) erstellt. [Weitere Quellen ergänzen]</p>
+<p>Ein Teil der Bilder auf dieser Website wurde mit Hilfe von KI (Higgsfield) erstellt.</p>
 
-<h2>Konzept & Umsetzung</h2>
-<p>[Name / Agentur der Webentwicklung]</p>
 """
 
 
 def datenschutz(p):
-    return f"""{notice()}
+    return f"""
 <p>Mit dieser Datenschutzerklärung informieren wir darüber, welche Personendaten wir im Zusammenhang mit dieser Website und unseren Leistungen bearbeiten. Wir richten uns nach dem schweizerischen Bundesgesetz über den Datenschutz (DSG) und der Datenschutzverordnung (DSV).</p>
 
 <h2>1. Verantwortliche Stelle</h2>
@@ -81,10 +79,10 @@ def datenschutz(p):
 <p>Alle Schriften und Skripte werden direkt von unserem Server geladen. Es werden keine Inhalte von Google Fonts oder ähnlichen Diensten nachgeladen.</p>
 
 <h2>9. Links zu sozialen Netzwerken und Karten</h2>
-<p>Unsere Website enthält einfache Links zu Instagram, Facebook und Google Maps. Erst wenn Sie einen solchen Link anklicken, werden Sie auf die Seite des jeweiligen Anbieters weitergeleitet, und es gelten dessen Datenschutzbestimmungen. Beim blossen Besuch unserer Website werden keine Daten an diese Anbieter übermittelt.</p>
+<p>Unsere Website enthält einfache Links zu Instagram und Google Maps. Erst wenn Sie einen solchen Link anklicken, werden Sie auf die Seite des jeweiligen Anbieters weitergeleitet, und es gelten dessen Datenschutzbestimmungen. Beim blossen Besuch unserer Website werden keine Daten an diese Anbieter übermittelt.</p>
 
 <h2>10. Aufbewahrung</h2>
-<p>Wir bewahren Personendaten nur so lange auf, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen (z. B. zehn Jahre für Geschäftsunterlagen). Anfragen, aus denen kein Auftrag entsteht, löschen wir in der Regel nach [12 Monaten].</p>
+<p>Wir bewahren Personendaten nur so lange auf, wie es für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungspflichten bestehen (z. B. zehn Jahre für Geschäftsunterlagen). Anfragen, aus denen kein Auftrag entsteht, löschen wir in der Regel nach 12 Monaten.</p>
 
 <h2>11. Datensicherheit</h2>
 <p>Wir treffen angemessene technische und organisatorische Massnahmen, um Ihre Daten vor Verlust, Missbrauch und unbefugtem Zugriff zu schützen. Die Übertragung der Website erfolgt verschlüsselt (HTTPS).</p>
