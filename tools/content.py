@@ -15,7 +15,7 @@ COMPANY = {
     "uid": "CHE-268.578.431",
     "instagram": "https://www.instagram.com/wow_print_ch/",
     "facebook": "#",
-    "domain": "https://www.wow-print.ch",
+    "domain": "https://wow-print.ch",
     "maps": "https://www.google.com/maps/search/?api=1&query=L%C3%B6wengartenstrasse+6%2C+9400+Rorschach",
 }
 

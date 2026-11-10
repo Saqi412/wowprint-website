@@ -5,7 +5,7 @@
     python3 tools/build.py --preview  # Links auf index.html, für lokale Vorschau
 """
 import hashlib
-import os, re
+import json, os, re
 import sys
 from html import escape
 
@@ -238,8 +238,83 @@ def page_hero(p, eyebrow, title_lines, lead="", crumbs=None, bg_num="", extra=""
 </section>"""
 
 
-def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=None, noindex=False):
+SITEMAP = []
+
+
+def business_ld():
+    return {
+        "@context": "https://schema.org", "@type": "LocalBusiness", "@id": C["domain"] + "/#firma",
+        "name": C["name"], "legalName": C["legal_name"], "url": C["domain"] + "/",
+        "logo": C["domain"] + "/assets/img/wowprint-logo.svg", "image": C["domain"] + "/assets/img/hero-car.jpg",
+        "description": "Werbetechnik und Design aus Rorschach: Fahrzeugbeschriftung und Folierung, Schaufenster, Textildruck, Print, Schilder, Grafikdesign und Websites.",
+        "email": C["email"], "taxID": C["uid"],
+        **({"telephone": C["phone"]} if "000 00 00" not in C["phone"] else {}),
+        "address": {"@type": "PostalAddress", "streetAddress": C["street"], "postalCode": C["zip"],
+                    "addressLocality": C["city"], "addressRegion": "SG", "addressCountry": "CH"},
+        "areaServed": [{"@type": "Country", "name": "Schweiz"}],
+        "openingHoursSpecification": [
+            {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+             "opens": o, "closes": c} for o, c in (("09:00", "12:00"), ("14:00", "17:00"))],
+        "sameAs": [C["instagram"]],
+        "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Leistungen", "itemListElement": [
+            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": f'{s["title"]}: {s["sub"]}',
+             "url": C["domain"] + "/leistungen/" + s["slug"] + "/"}} for s in SERVICES]},
+    }
+
+
+def strip_tags(t):
+    return re.sub(r"<[^>]+>", "", t)
+
+
+def service_ld(s):
+    return [
+        {"@context": "https://schema.org", "@type": "Service", "name": s["sub"], "serviceType": s["title"],
+         "description": s["short"], "provider": {"@id": C["domain"] + "/#firma"},
+         "areaServed": {"@type": "Country", "name": "Schweiz"}, "url": C["domain"] + "/leistungen/" + s["slug"] + "/"},
+        {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": strip_tags(q), "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}}
+            for q, a in s["faq"]]},
+    ]
+
+
+def seo_files():
+    """robots.txt, sitemap.xml und llms.txt (für Suchmaschinen und KI-Crawler)."""
+    with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(f"User-agent: *\nAllow: /\nDisallow: /danke/\n\nSitemap: {C['domain']}/sitemap.xml\n")
+    urls = "".join(f"  <url><loc>{u}</loc></url>\n" for u in dict.fromkeys(SITEMAP))
+    with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
+    svc = "\n".join(f'- [{s["title"]}: {s["sub"]}]({C["domain"]}/leistungen/{s["slug"]}/): {strip_tags(s["short"])}' for s in SERVICES)
+    hours = "Montag bis Freitag 09:00–12:00 und 14:00–17:00"
+    phone = "" if "000 00 00" in C["phone"] else f"\n- Telefon: {C['phone']}"
+    with open(os.path.join(OUT, "llms.txt"), "w", encoding="utf-8") as f:
+        f.write(f"""# {C["name"]}
+
+> {C["name"]} ({C["legal_name"]}) ist ein Werbetechnik- und Designstudio in {C["city"]} (Kanton St. Gallen, Schweiz). Fahrzeugbeschriftung und Folierung, Schaufenster- und Glasbeschriftung, Textildruck, Printmedien, Schilder, Grafikdesign und Websites: alles aus einer Hand, von der Idee bis zur Montage, für Kundschaft in der ganzen Schweiz.
+
+## Kontakt
+- Adresse: {C["street"]}, {C["zip"]} {C["city"]}, Schweiz
+- E-Mail: {C["email"]}{phone}
+- Öffnungszeiten: {hours}
+- Instagram: {C["instagram"]}
+- Offerte anfragen: {C["domain"]}/offerte/
+
+## Leistungen
+{svc}
+
+## Seiten
+- [Projekte]({C["domain"]}/projekte/)
+- [Über uns]({C["domain"]}/ueber-uns/)
+- [Kontakt]({C["domain"]}/kontakt/)
+- [Impressum]({C["domain"]}/impressum/)
+""")
+
+
+def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=None, noindex=False, ld=None):
     canonical_url = C["domain"] + "/" + (p.path if canonical is None else canonical)
+    if not noindex:
+        SITEMAP.append(canonical_url)
+    ld_html = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in [business_ld()] + (ld or []))
     robots = '<meta name="robots" content="noindex">' if noindex else ""
     return f"""<!doctype html>
 <html lang="de-CH">
@@ -262,7 +337,7 @@ def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=No
 <link rel="preload" href="{p.asset("fonts/archivo.woff2")}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p.asset("fonts/inter.woff2")}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{p.asset("css/style.css")}">
-<script>document.documentElement.classList.add('js')</script>
+{ld_html}<script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 {header(p, current)}
@@ -460,7 +535,7 @@ def services_overview():
 </section>
 {cta_band(p)}
 """
-    write(p, layout(p, "Services – WOW PRINT", "Fahrzeugbeschriftung, Schaufenster, Textildruck, Print, Schilder, Design und Websites von WOW PRINT in Rorschach.", body, current="leistungen/"))
+    write(p, layout(p, "Leistungen – WOW PRINT Rorschach", "Fahrzeugbeschriftung, Schaufenster, Textildruck, Print, Schilder, Design und Websites von WOW PRINT in Rorschach.", body, current="leistungen/"))
 
 
 def service_page(i, s):
@@ -523,7 +598,7 @@ def service_page(i, s):
 <div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl" style="font-size:clamp(30px, {min(8.4, 80 / (len(nxt["title"]) * 0.82 + 0.9)):.2f}vw, 148px)">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
 {cta_band(p)}
 """
-    write(p, layout(p, f"{s['title']} – {s['sub']} | WOW PRINT Rorschach", s["short"], body, current="leistungen/", og_img=s["img"]))
+    write(p, layout(p, f"{s['title']} – {s['sub']} | WOW PRINT Rorschach", s["short"], body, current="leistungen/", og_img=s["img"], ld=service_ld(s)))
 
 
 def projects_page():
@@ -546,7 +621,7 @@ def projects_page():
 </section>
 {cta_band(p, ("Ihr Projekt", "ist das nächste."))}
 """
-    write(p, layout(p, "Projects – WOW PRINT", "Ausgewählte Projekte von WOW PRINT: Fahrzeugfolierungen, Schaufenster, Textil, Print und Design.", body, current="projekte/"))
+    write(p, layout(p, "Projekte – WOW PRINT Rorschach", "Ausgewählte Projekte von WOW PRINT: Fahrzeugfolierungen, Schaufenster, Textil, Print und Design.", body, current="projekte/"))
 
 
 def about_page():
@@ -598,7 +673,7 @@ def about_page():
 </section>
 {cta_band(p)}
 """
-    write(p, layout(p, "About – WOW PRINT", "WOW PRINT: Italienisches Designgefühl trifft Schweizer Präzision. Werbetechnik und Design aus Rorschach.", body, current="ueber-uns/"))
+    write(p, layout(p, "Über uns – WOW PRINT Rorschach", "WOW PRINT: Italienisches Designgefühl trifft Schweizer Präzision. Werbetechnik und Design aus Rorschach.", body, current="ueber-uns/"))
 
 
 def contact_page():
@@ -636,7 +711,7 @@ def contact_page():
   </div>
 </section>
 """
-    write(p, layout(p, "Contact – WOW PRINT Rorschach", f"Kontakt zu WOW PRINT, {ADDRESS}. Öffnungszeiten Mo–Fr 09:00–12:00 und 14:00–17:00.", body, current="kontakt/"))
+    write(p, layout(p, "Kontakt – WOW PRINT Rorschach", f"Kontakt zu WOW PRINT, {ADDRESS}. Öffnungszeiten Mo–Fr 09:00–12:00 und 14:00–17:00.", body, current="kontakt/"))
 
 
 def quote_page():
@@ -773,6 +848,7 @@ def main():
     legal_page("impressum", "Impressum", "Impressum.", "Impressum von WOW PRINT, Rorschach.", impressum)
     legal_page("datenschutz", "Datenschutz", "Datenschutz.", "Datenschutzerklärung von WOW PRINT nach Schweizer Datenschutzgesetz (DSG).", datenschutz)
     legal_page("agb", "AGB", "AGB.", "Allgemeine Geschäftsbedingungen von WOW PRINT.", agb)
+    seo_files()
     print("Fertig.")
 
 
