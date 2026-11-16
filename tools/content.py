@@ -200,6 +200,13 @@ SERVICES = [
             ("Kümmern Sie sich auch um Domain und Hosting?", "Ja, wir richten alles ein und beraten Sie zu Domain, E-Mail und Hosting."),
         ],
     },
+    {
+        "slug": "wow-lab", "key": "wowlab", "num": "08", "title": "WOW LAB",
+        "sub": "Räume. Objekte. Erlebnisse.", "img": "service-wowlab.jpg", "go": "Mehr entdecken",
+        "seo_sub": "Interior Design, Ladenbau & individuelle Möbel",
+        "short": "Wir verwandeln gewöhnliche Räume in aussergewöhnliche Erlebnisse. Mit kreativem Interior Design, individuellem Möbelbau und über 20 Jahren Erfahrung in Industrial Design und Konstruktion erschaffen wir Orte und Objekte, die in Erinnerung bleiben.",
+        "custom": True, "faq": [],
+    },
 ]
 
 PROJECTS = [
@@ -218,3 +225,56 @@ PROCESS = [
     ("03", "Produktion", "Wir drucken, plotten, produzieren und montieren. Alles im eigenen Haus."),
     ("04", "Wow", "Bereit, gesehen zu werden. Ihr Auftritt ist da und fällt auf."),
 ]
+
+
+# ---------------------------------------------------------------- WOW LAB (eigene Unterseite)
+WOWLAB = {
+    "idea": [
+        "WOW LAB ist das kreative Design- und Entwicklungsstudio von WOW PRINT. Wir helfen Unternehmen, Geschäfte und Räume in etwas Aussergewöhnliches zu verwandeln.",
+        "Unser Anspruch ist es, nicht einfach schöne Einrichtungen zu gestalten, sondern einzigartige Orte zu schaffen, die Emotionen auslösen, Aufmerksamkeit erzeugen und im Gedächtnis bleiben.",
+        "Dafür verbinden wir kreatives Interior Design mit über 20 Jahren Erfahrung in Industrial Design, CAD-Konstruktion und technischer Produktentwicklung. Wir denken nicht nur darüber nach, wie etwas aussehen könnte. Wir wissen auch, wie man es konstruiert und realisiert.",
+        "Von einzelnen Designobjekten über individuelle Möbel bis hin zu kompletten Ladenkonzepten.",
+    ],
+    "hero": [
+        "Wir lieben Räume mit Charakter. Ideen, die überraschen. Und Designs, die man nicht mehr vergisst.",
+        "WOW LAB verbindet kreatives Interior Design, Industrial Design und technische Konstruktion zu aussergewöhnlichen Lösungen.",
+        "Ob ein kompletter Ladenumbau, individuelle Möbel, einzigartige Schaufenster oder ein Designobjekt, das es so noch nicht gibt.",
+    ],
+    "offers": [
+        ("Interior & Retail Design", "Räume, die Geschichten erzählen.", [
+            "Wir entwickeln kreative Raum- und Ladenkonzepte, die Marken erlebbar machen. Vom kleinen Geschäft bis zum kompletten Showroom gestalten wir individuelle Umgebungen mit Persönlichkeit.",
+            "Dazu gehören Ladenumbauten, Geschäftseinrichtungen, Verkaufsräume, Empfangsbereiche und aussergewöhnliche Raumgestaltungen."]),
+        ("Custom Furniture & Objects", "Nicht von der Stange. Sondern einzigartig.", [
+            "Wir entwickeln individuelle Möbel, Präsentationssysteme und Designobjekte. Ob Verkaufstheke, Regal, Tisch, Produktdisplay oder aussergewöhnliches Einzelstück: Jedes Objekt wird passend zum Raum und zur Idee gestaltet.",
+            "Dabei kombinieren wir Materialien wie Holz, Metall, Plexiglas und Licht."]),
+        ("Light & Installations", "Wenn Design zum Erlebnis wird.", [
+            "Individuelle Lichtkonzepte, beleuchtete Objekte, kreative Installationen und aussergewöhnliche Schaufensterinszenierungen.",
+            "Wir verbinden Materialien, Formen und Beleuchtung zu einzigartigen visuellen Erlebnissen."]),
+        ("Industrial Design & Engineering", "Kreativität trifft technisches Know-how.", [
+            "Mit über 20 Jahren Erfahrung in CAD-Konstruktion und technischer Produktentwicklung verfügen wir über die Kompetenz, kreative Ideen auch technisch zu entwickeln.",
+            "Von der ersten Skizze über 3D-Modelle und konstruktive Detaillierung bis zur Umsetzung."]),
+        ("Custom Projects", "Sie haben eine Idee? Wir finden eine Lösung.", [
+            "Nicht jedes Projekt passt in eine Kategorie.",
+            "Deshalb entwickeln wir auch individuelle Sonderlösungen, Prototypen, Präsentationsobjekte, Messe- und Eventelemente sowie aussergewöhnliche Konstruktionen."]),
+    ],
+    "strength": [
+        "Gutes Design begeistert. Durchdachtes Design funktioniert. WOW LAB verbindet beides.",
+        "Über 20 Jahre Erfahrung in Industrial Design, CAD-Konstruktion und technischer Produktentwicklung ermöglichen es uns, kreative Ideen aus einer anderen Perspektive zu betrachten.",
+        "Wir verstehen Formen, Materialien, Funktionen und Fertigungsprozesse. Das Ergebnis sind individuelle Lösungen, die nicht nur aussergewöhnlich aussehen, sondern auch technisch durchdacht sind.",
+    ],
+    "process": [
+        ("01", "Discover", "Wir verstehen Ihre Idee, Ihre Marke und Ihre Vorstellungen."),
+        ("02", "Create", "Wir entwickeln ein individuelles Designkonzept."),
+        ("03", "Engineer", "Wir konstruieren und planen die technische Umsetzung."),
+        ("04", "Build", "Wir realisieren das Projekt in unserer Werkstatt und mit spezialisierten Partnern."),
+        ("05", "Wow", "Ein einzigartiges Ergebnis, das Eindruck hinterlässt."),
+    ],
+    "gallery": [
+        ("wowlab-1.jpg", "Kleiner Laden, aussergewöhnlich eingerichtet"),
+        ("wowlab-2.jpg", "Boutique mit Präsentationsmöbeln nach Mass"),
+        ("wowlab-3.jpg", "Verkaufstheke aus Holz, Metall und Plexiglas"),
+        ("wowlab-4.jpg", "Schaufenster mit ungewöhnlicher Inszenierung"),
+        ("wowlab-5.jpg", "Beleuchtetes Designobjekt"),
+        ("wowlab-6.jpg", "CAD-Konstruktion einer Einrichtung"),
+    ],
+}

@@ -10,7 +10,7 @@ import sys
 from html import escape
 
 sys.path.insert(0, os.path.dirname(__file__))
-from content import COMPANY, HOURS, SERVICES, PROJECTS, PROCESS  # noqa: E402
+from content import COMPANY, HOURS, SERVICES, PROJECTS, PROCESS, WOWLAB  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "site")
 PREVIEW = "--preview" in sys.argv
@@ -257,7 +257,7 @@ def business_ld():
              "opens": o, "closes": c} for o, c in (("09:00", "12:00"), ("14:00", "17:00"))],
         "sameAs": [C["instagram"]],
         "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Leistungen", "itemListElement": [
-            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": f'{s["title"]}: {s["sub"]}',
+            {"@type": "Offer", "itemOffered": {"@type": "Service", "name": f'{s["title"]}: {s.get("seo_sub", s["sub"])}',
              "url": C["domain"] + "/leistungen/" + s["slug"] + "/"}} for s in SERVICES]},
     }
 
@@ -268,13 +268,13 @@ def strip_tags(t):
 
 def service_ld(s):
     return [
-        {"@context": "https://schema.org", "@type": "Service", "name": s["sub"], "serviceType": s["title"],
+        {"@context": "https://schema.org", "@type": "Service", "name": s.get("seo_sub", s["sub"]), "serviceType": s["title"],
          "description": s["short"], "provider": {"@id": C["domain"] + "/#firma"},
          "areaServed": {"@type": "Country", "name": "Schweiz"}, "url": C["domain"] + "/leistungen/" + s["slug"] + "/"},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": strip_tags(q), "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}}
             for q, a in s["faq"]]},
-    ]
+    ][:2 if s["faq"] else 1]
 
 
 def seo_files():
@@ -284,7 +284,7 @@ def seo_files():
     urls = "".join(f"  <url><loc>{u}</loc></url>\n" for u in dict.fromkeys(SITEMAP))
     with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
-    svc = "\n".join(f'- [{s["title"]}: {s["sub"]}]({C["domain"]}/leistungen/{s["slug"]}/): {strip_tags(s["short"])}' for s in SERVICES)
+    svc = "\n".join(f'- [{s["title"]}: {s.get("seo_sub", s["sub"])}]({C["domain"]}/leistungen/{s["slug"]}/): {strip_tags(s["short"])}' for s in SERVICES)
     hours = "Montag bis Freitag 09:00–12:00 und 14:00–17:00"
     phone = "" if "000 00 00" in C["phone"] else f"\n- Telefon: {C['phone']}"
     with open(os.path.join(OUT, "llms.txt"), "w", encoding="utf-8") as f:
@@ -414,14 +414,7 @@ def service_cards(p):
         <h3 class="display">{s["title"]}</h3>
         <p>{s["sub"]}</p>
         <div class="thumb">{img(p, s["img"], s["title"] + " – " + s["sub"])}</div>
-        <span class="go"><span>Mehr</span>{ARROW}</span>
-      </a>"""
-    cards += f"""
-      <a class="service-card service-card--cta" href="{p.url("offerte/")}">
-        <span class="num">08</span>
-        <span class="big">Ihre<br>Idee?</span>
-        <p>Etwas Besonderes vor? Erzählen Sie uns davon, wir finden einen Weg.</p>
-        <span class="go"><span>Offerte</span>{ARROW}</span>
+        <span class="go"><span>{s.get("go", "Mehr")}</span>{ARROW}</span>
       </a>"""
     return cards
 
@@ -455,7 +448,7 @@ def home():
     <div class="services-intro">
       <span class="eyebrow">Leistungen</span>
       <h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Was wir", "machen.")}</h2>
-      <p class="lead" data-reveal>Sieben Disziplinen, ein Ziel: Ihre Marke sichtbar machen. Von der ersten Skizze bis zur fertigen Montage, alles aus einer Hand.</p>
+      <p class="lead" data-reveal>Acht Disziplinen, ein Ziel: Ihre Marke sichtbar machen. Von der ersten Skizze bis zur fertigen Montage, alles aus einer Hand.</p>
       <a class="btn" href="{p.url("leistungen/")}" data-magnetic=".3" data-reveal>Alle Leistungen {ARROW}</a>
     </div>
     <div class="services-grid">{service_cards(p)}
@@ -518,7 +511,7 @@ def services_overview():
       <span class="circle">{ARROW}</span>
     </a>""" for s in SERVICES)
     body = f"""
-{page_hero(p, "Leistungen", ["Was wir", "machen."], "Sieben Disziplinen unter einem Dach. Wir gestalten, produzieren und montieren und machen Ihre Marke überall sichtbar, wo man sie sehen soll.", [("", "Start"), (None, "Leistungen")])}
+{page_hero(p, "Leistungen", ["Was wir", "machen."], "Acht Disziplinen unter einem Dach. Wir gestalten, produzieren und montieren und machen Ihre Marke überall sichtbar, wo man sie sehen soll.", [("", "Start"), (None, "Leistungen")])}
 <section class="section">
   <div class="wrap">
     <div class="svc-list">{rows}
@@ -601,10 +594,98 @@ def service_page(i, s):
     write(p, layout(p, f"{s['title']} – {s['sub']} | WOW PRINT Rorschach", s["short"], body, current="leistungen/", og_img=s["img"], ld=service_ld(s)))
 
 
+def wowlab_page(i, s):
+    p = Page(f"leistungen/{s['slug']}/")
+    W = WOWLAB
+    nxt = SERVICES[(i + 1) % len(SERVICES)]
+    ask = f'{p.url("offerte/")}?leistung={s["key"]}'
+    offers = "".join(f"""<li data-reveal><span class="num">{str(k + 1).zfill(2)}</span><div><h3 class="display">{t}</h3><p class="lab-tag">{tag}</p></div><div class="lab-text">{"".join(f"<p>{x}</p>" for x in txt)}</div></li>"""
+                     for k, (t, tag, txt) in enumerate(W["offers"]))
+    steps = "".join(f'<div class="step{" step--wow" if n == "05" else ""}"><span class="num">{n}</span><h3 class="display">{t}</h3><p>{d}</p></div>' for n, t, d in W["process"])
+    gal = "".join(f'<figure class="lab-g{k + 1}" data-reveal>{img(p, f, c + " (Konzeptvisualisierung)")}<figcaption>{c}</figcaption></figure>'
+                  for k, (f, c) in enumerate(W["gallery"]))
+    related = [x for x in SERVICES if x["key"] in ("windows", "signage", "design")]
+    rel = "".join(f'<a class="lab-rel" href="{p.url("leistungen/" + x["slug"] + "/")}"><span class="num">{x["num"]}</span><b class="display">{x["title"]}</b><small>{x["sub"]}</small>{ARROW}</a>' for x in related)
+    body = f"""
+{page_hero(p, "WOW PRINT presents", ["WOW LAB."], "Das kreative Design- und Entwicklungsstudio von WOW PRINT. Räume. Objekte. Erlebnisse.", [("", "Start"), ("leistungen/", "Leistungen"), (None, "WOW LAB")], bg_num=s["num"])}
+<div class="media-band">{img(p, s["img"], "WOW LAB – kreativ eingerichteter Laden (Konzeptvisualisierung)", 'data-parallax=".25"')}</div>
+<section class="section">
+  <div class="wrap split">
+    <div><span class="eyebrow">08 — WOW LAB</span><h2 class="display d-m" style="margin-top:18px" data-lines>{lines("Gewöhnlich", "kann jeder.")}</h2></div>
+    <div class="prose" data-reveal>{"".join(f"<p>{t}</p>" for t in W["hero"])}
+      <p class="lab-claim">Wir machen aus Räumen Erlebnisse.</p>
+      <a class="btn btn--solid" href="{ask}" data-magnetic=".3" style="margin-top:6px">Projekt anfragen {ARROW}</a>
+    </div>
+  </div>
+</section>
+<section class="section section--tight" style="padding-top:0">
+  <div class="wrap split">
+    <div><span class="eyebrow">Die Idee</span></div>
+    <div class="prose lab-idea" data-reveal>{"".join(f"<p>{t}</p>" for t in W["idea"])}<p class="lab-claim">WOW LAB – wir gestalten, was in Erinnerung bleibt.</p></div>
+  </div>
+</section>
+{marquee(["Interior", "Retail", "Möbel", "Licht", "Engineering", "Wow"])}
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Angebot</span><h2 class="display d-l" data-lines>{lines("Was wir", "machen.")}</h2></div>
+    <ul class="offer-list lab-offers">{offers}</ul>
+  </div>
+</section>
+<section class="section bg-ink on-dark">
+  <div class="wrap split">
+    <div><span class="eyebrow" style="color:var(--pink)">Unsere Stärke</span><h2 class="display d-l lab-dme" style="margin-top:18px" data-lines>{lines("Design", "meets", "Engineering.")}</h2></div>
+    <div class="prose" data-reveal>{"".join(f"<p>{t}</p>" for t in W["strength"])}<p class="lab-claim lab-claim--pink">We don’t think standard.</p></div>
+  </div>
+</section>
+<section class="process section">
+  <div class="wrap process-grid">
+    <div><span class="eyebrow">Ablauf</span><h2 class="display d-l" style="margin-top:18px" data-lines>{lines("Von der Idee", "zum WOW.")}</h2></div>
+    <div class="process-steps process-steps--5"><div class="process-line"><i></i></div>{steps}</div>
+  </div>
+</section>
+<section class="section bg-paper2">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Möglichkeiten</span><h2 class="display d-l" data-lines>{lines("Was möglich", "ist.")}</h2><p class="muted">Konzeptvisualisierungen: So könnten WOW-LAB-Projekte aussehen. Es handelt sich nicht um realisierte Referenzprojekte.</p></div>
+    <div class="gallery lab-gallery">{gal}</div>
+  </div>
+</section>
+<section class="section lab-brand">
+  <div class="wrap">
+    <span class="eyebrow">WOW LAB</span>
+    <h2 class="display d-xl" style="margin-top:18px" data-lines>{lines("Beyond", "ordinary.")}</h2>
+    <div class="lab-brand-text" data-reveal>
+      <p>Wir gestalten Räume, Möbel und Objekte, die Menschen begeistern. Mit Kreativität, Leidenschaft und technischem Know-how verwandeln wir gewöhnliche Ideen in aussergewöhnliche Erlebnisse.</p>
+      <p class="lab-claim">Not just design. A WOW experience.</p>
+      <small>WOW LAB – a creative division of WOW PRINT.</small>
+    </div>
+  </div>
+</section>
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">Passt dazu</span><h2 class="display d-m" data-lines>{lines("Alles aus", "einer Hand.")}</h2></div>
+    <div class="lab-rels">{rel}</div>
+  </div>
+</section>
+<div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl" style="font-size:clamp(30px, {min(8.4, 80 / (len(nxt["title"]) * 0.82 + 0.9)):.2f}vw, 148px)">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
+<section class="cta-band section lab-cta">
+  <div class="wrap">
+    <h2 class="cta-title display" data-lines>{lines("Eine Idee?")}<span class="line"><span><span class="fill"><span class="fill-base">{fill_text("Wir machen sie WOW.")}</span><span class="fill-top" aria-hidden="true">{fill_text("Wir machen sie WOW.")}</span></span></span></span></h2>
+    <div class="cta-side">
+      <p>Ein Laden, der anders sein soll. Ein Möbelstück, das es nicht zu kaufen gibt. Ein Raum, der Menschen begeistert. Oder einfach eine verrückte Idee. Erzählen Sie uns davon.</p>
+      <a class="btn btn--solid" href="{ask}" data-magnetic=".3">Projekt anfragen {ARROW}</a>
+    </div>
+  </div>
+</section>
+"""
+    write(p, layout(p, "WOW LAB | Interior Design, Ladenbau & individuelle Möbel | WOW PRINT",
+                    "WOW LAB by WOW PRINT – kreatives Interior Design, aussergewöhnlicher Ladenbau, individuelle Möbel und Sonderanfertigungen. Design trifft über 20 Jahre Konstruktionserfahrung.",
+                    body, current="leistungen/", og_img=s["img"], ld=service_ld(s)))
+
+
 def projects_page():
     p = Page("projekte/")
     chips = '<button class="chip is-active" data-filter="all" aria-pressed="true">Alle</button>' + "".join(
-        f'<button class="chip" data-filter="{s["key"]}" aria-pressed="false">{s["title"]}</button>' for s in SERVICES)
+        f'<button class="chip" data-filter="{s["key"]}" aria-pressed="false">{s["title"]}</button>' for s in SERVICES if not s.get("custom"))
     cards = "".join(f"""
       <article class="work-card" data-cat="{pr["cat"]}" data-cursor="WOW" data-reveal>
         <div class="media">{img(p, pr["img"], pr["title"])}</div>
@@ -714,72 +795,113 @@ def contact_page():
     write(p, layout(p, "Kontakt – WOW PRINT Rorschach", f"Kontakt zu WOW PRINT, {ADDRESS}. Öffnungszeiten Mo–Fr 09:00–12:00 und 14:00–17:00.", body, current="kontakt/"))
 
 
+QUOTE_ICONS = {
+    "beschriftung": '<path d="M3 15.5V12l2.2-4.6A2 2 0 0 1 7 6.3h7.6a2 2 0 0 1 1.6.8L19.5 11l1.3.5c.7.3 1.2 1 1.2 1.8v2.2h-2"/><path d="M3 15.5h2.2M10.8 15.5h4.4"/><circle cx="8" cy="16" r="2.2"/><circle cx="18" cy="16" r="2.2"/><path d="M6 11h13.3"/>',
+    "schaufenster": '<path d="M3 21V10M21 21V10M2 21h20"/><path d="M2.5 6.5 4 3h16l1.5 3.5c0 1.6-1.3 2.8-2.8 2.8s-2.8-1.2-2.8-2.8c0 1.6-1.3 2.8-2.9 2.8S10 8.1 10 6.5c0 1.6-1.3 2.8-2.8 2.8s-2.9-1.2-2.9-2.8"/><rect x="6" y="13" width="7" height="5"/><path d="M16 21v-8h3v8"/>',
+    "textildruck": '<path d="M8.5 3 3 6l2 4 2-.8V21h10V9.2l2 .8 2-4-5.5-3c-.5 1.5-1.9 2.5-3.5 2.5S9 4.5 8.5 3Z"/>',
+    "werbetafeln": '<rect x="3" y="4" width="18" height="10" rx="1"/><path d="M7 14v7M17 14v7M7 8h7M7 11h10"/>',
+    "print": '<path d="M7 8V3h10v5"/><rect x="3" y="8" width="18" height="9" rx="1.5"/><path d="M7 14h10v7H7z"/><circle cx="17.5" cy="11" r=".6" fill="currentColor"/>',
+    "design": '<path d="m12 2 6 8-6 12L6 10Z"/><circle cx="12" cy="12" r="1.6"/><path d="M12 2v8.4"/>',
+    "webdesign": '<rect x="2.5" y="4" width="19" height="15" rx="1.5"/><path d="M2.5 8h19"/><circle cx="5.5" cy="6" r=".5" fill="currentColor"/><circle cx="7.5" cy="6" r=".5" fill="currentColor"/><path d="m9 12-2.5 2.5L9 17M15 12l2.5 2.5L15 17"/>',
+    "wowlab": '<path d="M12 2v4"/><path d="M6 13a6 6 0 0 1 12 0Z"/><path d="M10 13a2 2 0 0 0 4 0"/><path d="M5 21h14M8 21l1.5-5M16 21l-1.5-5"/>',
+}
+
+# Hauptleistung -> (Titel, Unteroptionen). "Ich brauche Beratung" kommt in jeder Gruppe automatisch dazu.
+QUOTE_GROUPS = [
+    ("beschriftung", "Beschriftung", "Beschriftung", ["Fahrzeugbeschriftung", "Schaufensterbeschriftung", "Fahrzeugfolierung", "Lochfolie fürs Fahrzeug"]),
+    ("schaufenster", "Schaufenster", "Schaufenster", ["Schaufensterbeschriftung", "Milchglasfolie", "Sichtschutzfolie", "Sonnenschutzfolie", "Kleine Motive und Aufkleber"]),
+    ("textildruck", "Textildruck", "Textildruck", ["T-Shirts", "Hoodies und Pullover", "Arbeitskleidung", "Jacken", "Vereinskleidung"]),
+    ("werbetafeln", "Werbetafeln", "Werbetafeln", ["Firmenschild", "Bautafel", "Wegweiser", "Werbebanner", "Leuchtschild"]),
+    ("print", "Print", "Print", ["Visitenkarten", "Flyer", "Aufkleber und Etiketten", "Plakate", "Verpackungen"]),
+    ("design", "Design", "Design", ["Logo", "Branding", "Drucksachen gestalten", "Fahrzeug- oder Schaufenstergestaltung"]),
+    ("webdesign", "Webdesign", "Webdesign", ["Neue Website", "Bestehende Website überarbeiten", "Landingpage"]),
+    ("wowlab", "WOW LAB", "WOW LAB – Ladenbau & Interieur", ["Laden umbauen oder neu gestalten", "Interieurdesign", "Möbel nach Mass", "Individuelle Beleuchtung", "Sonderanfertigung aus Holz, Metall oder Plexiglas", "Messestand"]),
+]
+
+# Zusatzfrage: (id, Frage, Antworten, ausgelöst durch Optionen oder Hauptleistung)
+QUOTE_DETAILS = [
+    ("fahrzeug", "Welches Fahrzeug?", ["PW", "Transporter", "LKW", "Anhänger", "Anderes"], {"opts": ["Fahrzeugbeschriftung", "Fahrzeugfolierung", "Lochfolie fürs Fahrzeug"]}),
+    ("fenster", "Wie viele Fenster?", ["1 Fenster", "2–3 Fenster", "4 oder mehr", "Noch offen"], {"opts": ["Schaufensterbeschriftung"]}),
+    ("stueck", "Wie viele Stück ungefähr?", ["1–10", "11–25", "26–50", "Über 50", "Noch offen"], {"main": "textildruck"}),
+]
+
+
 def quote_page():
     p = Page("offerte/")
-    choices = "".join(f"""
-          <label class="choice"><input type="checkbox" name="leistung[]" value="{s["key"]}"><span><em>{s["num"]}</em><b>{s["title"]}</b><small>{s["sub"]}</small></span></label>""" for s in SERVICES)
-    choices += '<label class="choice"><input type="checkbox" name="leistung[]" value="anderes"><span><em>08</em><b>Anderes</b><small>Etwas anderes oder noch unklar</small></span></label>'
+    CHECK = '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17.5 19 7" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>'
 
-    def radio_group(name, opts):
-        return "".join(f'<label class="choice"><input type="radio" name="{name}" value="{o}"{" required" if k == 0 else ""}><span><b>{o}</b></span></label>' for k, o in enumerate(opts))
+    tiles = "".join(f"""
+          <label class="q-tile"><input type="checkbox" data-main="{k}" value="{t}"><span><i class="q-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{QUOTE_ICONS[k]}</svg></i><b>{t}</b>{CHECK}</span></label>"""
+                    for k, t, _, _ in QUOTE_GROUPS)
+
+    def pill(o, attrs=""):
+        return f'<label class="q-pill"><input type="checkbox" value="{o}" data-opt="{o}"{attrs}><span>{o}</span></label>'
+
+    def detail(did, q, answers, trig):
+        t = f' data-opts="{"|".join(trig["opts"])}"' if "opts" in trig else f' data-main-trigger="{trig["main"]}"'
+        btns = "".join(f'<label class="q-pill q-pill--sm"><input type="radio" name="q-{did}" value="{a}"><span>{a}</span></label>' for a in answers)
+        return f'<div class="q-detail" data-detail="{did}" data-label="{ {"fahrzeug": "Fahrzeug", "fenster": "Anzahl", "stueck": "Stückzahl"}[did]}"{t} hidden><p class="q-detail-q">{q} <span class="opt">optional</span></p><div class="q-pills">{btns}</div></div>'
+
+    details = {d[0]: detail(*d) for d in QUOTE_DETAILS}
+    groups = ""
+    for k, t, head, opts in QUOTE_GROUPS:
+        here = "".join(details[d[0]] for d in QUOTE_DETAILS
+                       if ("opts" in d[3] and any(o in opts for o in d[3]["opts"]) and d[0] != "fenster") or d[3].get("main") == k)
+        groups += f"""
+          <div class="q-group" data-group="{k}" hidden>
+            <h3 class="q-group-title"><i class="q-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{QUOTE_ICONS[k]}</svg></i>{head}</h3>
+            <div class="q-pills">{"".join(pill(o) for o in opts)}{pill("Ich brauche Beratung", ' data-beratung')}</div>
+            {here}<div class="q-slot"></div>
+          </div>"""
+    fenster = details["fenster"]
 
     def dz(n, label):
-        return f"""<label class="dropzone"><input type="file" name="datei{n}" accept=".pdf,.ai,.eps,.svg,.png,.jpg,.jpeg,.heic,.zip"><span class="dz-ico">{UPLOAD}</span><span><strong>{label}</strong><small>PDF, AI, EPS, SVG, JPG, PNG oder ZIP</small></span></label>"""
+        return f"""<label class="dropzone"><input type="file" name="datei{n}" accept=".pdf,.ai,.eps,.svg,.png,.jpg,.jpeg,.heic,.zip"><span class="dz-ico">{UPLOAD}</span><span><strong>{label}</strong><small>Logo, Foto oder Skizze · PDF, AI, SVG, JPG, PNG oder ZIP</small></span></label>"""
 
     body = f"""
-{page_hero(p, "Offerte", ["Machen wir", "es WOW."], "In vier kurzen Schritten zur unverbindlichen Offerte. Wir melden uns innert zwei Arbeitstagen bei Ihnen.", [("", "Start"), (None, "Offerte")])}
-<section class="section">
-  <div class="wrap" style="max-width:1100px">
-    <form class="wizard" name="offerte" method="POST" action="{p.form_action("danke/")}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+{page_hero(p, "Offerte", ["Machen wir", "es WOW."], "Stellen Sie Ihre Anfrage in wenigen Klicks zusammen. Ohne Beschreibung, Masse oder Fotos. Wir melden uns innert zwei Arbeitstagen.", [("", "Start"), (None, "Offerte")])}
+<section class="section q-section">
+  <div class="wrap" style="max-width:1160px">
+    <form class="wizard qform" name="offerte" method="POST" action="{p.form_action("danke/")}" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" novalidate>
       <input type="hidden" name="form-name" value="offerte">
+      <input type="hidden" name="leistung" value="">
+      <textarea name="auswahl" hidden></textarea>
       <p class="hp"><label>Nicht ausfüllen: <input name="bot-field"></label></p>
-      <ol class="wizard-progress" aria-hidden="true"><li><span>01 Leistung</span></li><li><span>02 Projekt</span></li><li><span>03 Dateien</span></li><li><span>04 Kontakt</span></li></ol>
+      <ol class="wizard-progress wizard-progress--2" aria-hidden="true"><li><span>01 Auswahl</span></li><li><span>02 Kontakt</span></li></ol>
 
-      <fieldset data-require-one>
-        <legend><span class="eyebrow">Schritt 1 von 4</span><h2 class="display d-m" style="margin-top:14px">Was brauchen Sie?</h2></legend>
-        <div class="choice-grid">{choices}
+      <fieldset data-require-main>
+        <legend><span class="eyebrow">Schritt 1 von 2</span><h2 class="display d-m" style="margin-top:14px">Was möchten Sie umsetzen?</h2></legend>
+        <p class="q-hint">Mehrfachauswahl möglich.</p>
+        <div class="q-tiles">{tiles}
+        </div>
+        <div class="q-subs" aria-live="polite">
+          <p class="q-subs-head" hidden><span class="eyebrow">Was genau brauchen Sie?</span><small>Alles optional. Sie können auch direkt weiter.</small></p>
+          {groups}
+          <div class="q-park" hidden>{fenster}</div>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend><span class="eyebrow">Schritt 2 von 4</span><h2 class="display d-m" style="margin-top:14px">Erzählen Sie mehr.</h2></legend>
-        <div class="form-grid">
-          <div class="field full"><label for="o-desc">Projektbeschreibung</label><textarea id="o-desc" name="beschreibung" required placeholder="Was soll entstehen? Z. B. Fahrzeugmodell, Fläche, Anzahl Shirts, Wunschtexte …"></textarea></div>
-          <div class="field"><label for="o-menge">Menge / Masse <span class="opt">(optional)</span></label><input id="o-menge" name="menge" placeholder="z. B. 3 Fahrzeuge, 2 × 1.5 m, 50 Stück"></div>
-          <div class="field"><label for="o-termin">Wunschtermin <span class="opt">(optional)</span></label><input id="o-termin" type="date" name="termin"></div>
-          <div class="field full"><span class="label">Budgetrahmen <span class="opt">(optional)</span></span>
-            <div class="choice-grid choice-grid--sm" style="margin-top:6px">
-              {"".join(f'<label class="choice"><input type="radio" name="budget" value="{o}"><span><b>{o}</b></span></label>' for o in ["bis CHF 1’000", "CHF 1’000 – 3’000", "CHF 3’000 – 10’000", "über CHF 10’000", "Noch offen"])}
-            </div></div>
-          <div class="field full"><span class="label">Design vorhanden?</span>
-            <div class="choice-grid choice-grid--sm" style="margin-top:6px">{radio_group("design", ["Ja, Druckdaten sind bereit", "Teilweise (Logo o. ä.)", "Nein, bitte gestalten"])}</div></div>
+        <legend><span class="eyebrow">Schritt 2 von 2</span><h2 class="display d-m" style="margin-top:14px">Fast geschafft.</h2></legend>
+        <div class="q-summary">
+          <div class="q-summary-head"><span class="eyebrow">Ihre Auswahl</span><button type="button" class="q-edit link-u">Ändern</button></div>
+          <ul class="q-summary-list"></ul>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend><span class="eyebrow">Schritt 3 von 4</span><h2 class="display d-m" style="margin-top:14px">Dateien hochladen.</h2></legend>
-        <p class="muted" style="margin:-10px 0 24px">Logo, Druckdaten, Fotos vom Fahrzeug oder Schaufenster, Skizzen. Alles hilft. Optional, max. 8 MB insgesamt.</p>
-        <div class="uploads">{dz(1, "Datei 1 hochladen")}{dz(2, "Datei 2 hochladen")}{dz(3, "Datei 3 hochladen")}</div>
-      </fieldset>
-
-      <fieldset>
-        <legend><span class="eyebrow">Schritt 4 von 4</span><h2 class="display d-m" style="margin-top:14px">Fast geschafft.</h2></legend>
         <div class="form-grid">
           <div class="field"><label for="o-name">Vorname & Name</label><input id="o-name" name="name" autocomplete="name" required></div>
-          <div class="field"><label for="o-firma">Firma <span class="opt">(optional)</span></label><input id="o-firma" name="firma" autocomplete="organization"></div>
           <div class="field"><label for="o-mail">E-Mail</label><input id="o-mail" type="email" name="email" autocomplete="email" required></div>
-          <div class="field"><label for="o-tel">Telefon</label><input id="o-tel" type="tel" name="telefon" autocomplete="tel" required></div>
-          <div class="field full"><label for="o-ort">PLZ / Ort <span class="opt">(optional)</span></label><input id="o-ort" name="ort" autocomplete="address-level2"></div>
-          <div class="field full"><span class="label">Bevorzugter Kontakt</span>
-            <div class="choice-grid choice-grid--sm" style="margin-top:6px">{radio_group("kontaktweg", ["Anruf", "WhatsApp", "E-Mail"])}</div></div>
-          <label class="check full"><input type="checkbox" name="datenschutz" value="akzeptiert" required><span>Ich habe die <a class="link-u" href="{p.url("datenschutz/")}">Datenschutzerklärung</a> und die <a class="link-u" href="{p.url("agb/")}">AGB</a> gelesen und bin einverstanden, dass meine Angaben für die Offerte verwendet werden.</span></label>
+          <div class="field"><label for="o-tel">Telefon <span class="opt">(optional)</span></label><input id="o-tel" type="tel" name="telefon" autocomplete="tel"></div>
+          <div class="field"><label for="o-firma">Firma <span class="opt">(optional)</span></label><input id="o-firma" name="firma" autocomplete="organization"></div>
+          <div class="field full"><span class="label">Dateien <span class="opt">(optional, max. 8 MB)</span></span><div class="uploads uploads--2" style="margin-top:6px">{dz(1, "Datei hochladen")}{dz(2, "Weitere Datei")}</div></div>
+          <div class="field full"><label for="o-mehr">Möchten Sie noch etwas ergänzen? <span class="opt">(optional)</span></label><textarea id="o-mehr" name="ergaenzung" rows="3"></textarea></div>
+          <p class="full q-legal">Mit dem Absenden akzeptieren Sie unsere <a class="link-u" href="{p.url("datenschutz/")}">Datenschutzerklärung</a> und <a class="link-u" href="{p.url("agb/")}">AGB</a>. Ihre Angaben verwenden wir nur für die Offerte.</p>
         </div>
       </fieldset>
 
       <p class="wizard-error" role="alert"></p>
-      <div class="wizard-nav">
+      <div class="wizard-nav q-nav">
         <button type="button" class="back" hidden>← Zurück</button>
-        <span></span>
+        <span class="q-count"></span>
         <button type="button" class="btn btn--solid next" data-magnetic=".3">Weiter {ARROW}</button>
         <button type="submit" class="btn btn--solid submit" hidden data-magnetic=".3">Offerte anfragen {ARROW}</button>
       </div>
@@ -787,7 +909,7 @@ def quote_page():
   </div>
 </section>
 """
-    write(p, layout(p, "Offerte anfragen – WOW PRINT", "Unverbindliche Offerte für Fahrzeugbeschriftung, Schaufenster, Textildruck, Print, Schilder, Design oder Website anfragen.", body))
+    write(p, layout(p, "Offerte anfragen – WOW PRINT", "Unverbindliche Offerte in wenigen Klicks: Beschriftung, Schaufenster, Textildruck, Werbetafeln, Print, Design, Webdesign oder WOW LAB.", body))
 
 
 def thanks_page():
@@ -838,7 +960,10 @@ def main():
     home()
     services_overview()
     for i, s in enumerate(SERVICES):
-        service_page(i, s)
+        if s.get("custom"):
+            wowlab_page(i, s)
+        else:
+            service_page(i, s)
     projects_page()
     about_page()
     contact_page()

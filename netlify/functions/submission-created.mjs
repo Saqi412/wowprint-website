@@ -8,7 +8,7 @@ const LABELS = {
   name: "Name", firma: "Firma", email: "E-Mail", telefon: "Telefon", ort: "Ort",
   thema: "Thema", nachricht: "Nachricht", leistung: "Leistung", beschreibung: "Beschreibung",
   menge: "Menge", termin: "Termin", budget: "Budget", design: "Design",
-  kontaktweg: "Kontaktweg", datei1: "Datei 1", datei2: "Datei 2", datei3: "Datei 3",
+  kontaktweg: "Kontaktweg", auswahl: "Auswahl", ergaenzung: "Ergänzung", datei1: "Datei 1", datei2: "Datei 2", datei3: "Datei 3",
 };
 const SKIP = new Set(["bot-field", "ip", "user_agent", "referrer", "datenschutz", "form-name"]);
 

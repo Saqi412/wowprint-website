@@ -385,16 +385,85 @@
   }
   openStatus(); setInterval(openStatus, 60000);
 
-  /* ---------- Offert-Wizard ---------- */
-  var wizard = $('.wizard');
+  /* ---------- Offert-Formular (Klick-Auswahl) ---------- */
+  var wizard = $('.qform');
   if (wizard) {
     var steps = $$('fieldset', wizard);
     var marks = $$('.wizard-progress li', wizard);
     var back = $('.back', wizard), next = $('.next', wizard), submit = $('.submit', wizard), err = $('.wizard-error', wizard);
+    var count = $('.q-count', wizard), subsHead = $('.q-subs-head', wizard), park = $('.q-park', wizard);
+    var mains = $$('input[data-main]', wizard);
     var cur = 0;
-    var params = new URLSearchParams(location.search);
-    var pre = params.get('leistung');
-    if (pre) $$('input[name="leistung[]"]', wizard).forEach(function (i) { if (i.value === pre) i.checked = true; });
+    var MAP = { vehicle: 'beschriftung', windows: 'schaufenster', textile: 'textildruck', print: 'print', signage: 'werbetafeln', design: 'design', digital: 'webdesign', wowlab: 'wowlab' };
+    var group = function (k) { return $('.q-group[data-group="' + k + '"]', wizard); };
+    var visibleGroups = function () { return mains.filter(function (m) { return m.checked; }).map(function (m) { return group(m.dataset.main); }); };
+
+    // Schaufensterbeschriftung gibt es in zwei Gruppen: sie gehört zu «Schaufenster», sonst zu «Beschriftung»
+    var sharedOwner = function (vis) {
+      var c = vis.filter(function (g) { var i = $('input[data-opt="Schaufensterbeschriftung"]', g); return i && i.checked; });
+      return c.filter(function (g) { return g.dataset.group === 'schaufenster'; })[0] || c[0];
+    };
+    var lastClicked = null, opened = null;
+    var refresh = function () {
+      var vis = visibleGroups();
+      mains.forEach(function (m) {
+        var g = group(m.dataset.main), was = !g.hidden;
+        g.hidden = !m.checked;
+        if (m.checked && !was && hasGsap && !reduce) gsap.from(g, { y: 18, opacity: 0, duration: .55, ease: 'expo.out' });
+        if (m.checked && !was && m === lastClicked) opened = g;
+      });
+      subsHead.hidden = !vis.length;
+      $$('.q-detail', wizard).forEach(function (d) {
+        var on;
+        if (d.dataset.mainTrigger) on = $('input[data-main="' + d.dataset.mainTrigger + '"]', wizard).checked;
+        else {
+          var opts = d.dataset.opts.split('|');
+          on = vis.some(function (g) { return $$('input[data-opt]', g).some(function (i) { return i.checked && opts.indexOf(i.dataset.opt) > -1; }); });
+        }
+        d.hidden = !on;
+      });
+      // Fenster-Frage in die erste sichtbare Gruppe mit Schaufensterbeschriftung
+      var fq = $('[data-detail="fenster"]', wizard);
+      var home = sharedOwner(vis);
+      var target = home ? $('.q-slot', home) : park;
+      if (fq.parentNode !== target) target.appendChild(fq);
+      var n = vis.length;
+      count.textContent = n ? n + (n === 1 ? ' Leistung gewählt' : ' Leistungen gewählt') : 'Bitte eine Leistung wählen';
+      wizard.classList.toggle('has-choice', n > 0);
+      if (n) err.textContent = '';
+      // Handy: neu geöffnete Optionen ins Bild holen, falls sie unter dem Bildschirmrand liegen
+      if (opened) {
+        var r = $('.q-group-title', opened).getBoundingClientRect(), navH = $('.q-nav', wizard).offsetHeight;
+        var overflow = r.bottom + (window.innerWidth > 900 ? 130 : 70) - (window.innerHeight - navH);
+        if (overflow > 0) { var y = window.scrollY + overflow; if (lenis) lenis.scrollTo(y, { duration: .7 }); else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); }
+      }
+      opened = null;
+    };
+
+    var collect = function () {
+      var rows = [], vis = visibleGroups(), owner = sharedOwner(vis);
+      vis.forEach(function (g) {
+        var k = g.dataset.group, title = $('input[data-main="' + k + '"]', wizard).value;
+        var opts = $$('input[data-opt]', g).filter(function (i) { return i.checked; }).map(function (i) { return i.dataset.opt; })
+          .filter(function (o) { return o !== 'Schaufensterbeschriftung' || g === owner; });
+        var extra = $$('.q-detail', g).filter(function (d) { return !d.hidden; }).map(function (d) {
+          var r = $('input:checked', d); return r ? d.dataset.label + ': ' + r.value : null;
+        }).filter(Boolean);
+        rows.push({ key: k, title: title, opts: opts, extra: extra });
+      });
+      return rows;
+    };
+    var renderSummary = function () {
+      var rows = collect();
+      $('.q-summary-list', wizard).innerHTML = rows.map(function (r) {
+        return '<li><b>' + r.title + '</b><span>' + (r.opts.length ? r.opts.join(', ') : 'Noch offen') +
+          (r.extra.length ? '<em>' + r.extra.join(' · ') + '</em>' : '') + '</span></li>';
+      }).join('');
+      wizard.elements.leistung.value = rows.map(function (r) { return r.title; }).join(', ');
+      wizard.elements.auswahl.value = rows.map(function (r) {
+        return r.title + ': ' + (r.opts.length ? r.opts.join(', ') : 'noch offen') + (r.extra.length ? ' (' + r.extra.join(', ') + ')' : '');
+      }).join('\n');
+    };
 
     var show = function (i) {
       steps.forEach(function (s, j) { s.classList.toggle('is-current', j === i); });
@@ -402,16 +471,19 @@
       back.hidden = i === 0;
       next.hidden = i === steps.length - 1;
       submit.hidden = i !== steps.length - 1;
+      count.hidden = i !== 0;
+      wizard.classList.toggle('on-last', i === steps.length - 1);
       err.textContent = '';
+      if (i === steps.length - 1) renderSummary();
       if (hasGsap && !reduce) gsap.from(steps[i].children, { y: 30, opacity: 0, duration: .8, ease: 'expo.out', stagger: .05 });
       cur = i;
     };
     var valid = function (i) {
       var s = steps[i];
-      if (s.hasAttribute('data-require-one') && !$$('input[type=checkbox]:checked', s).length) {
+      if (s.hasAttribute('data-require-main') && !mains.some(function (m) { return m.checked; })) {
         err.textContent = 'Bitte wählen Sie mindestens eine Leistung aus.'; return false;
       }
-      var fields = $$('input, textarea, select', s);
+      var fields = $$('input[required], textarea[required]', s);
       for (var k = 0; k < fields.length; k++) {
         if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
       }
@@ -421,14 +493,35 @@
       var top = wizard.getBoundingClientRect().top + window.scrollY - 120;
       if (lenis) lenis.scrollTo(top); else window.scrollTo({ top: top, behavior: 'smooth' });
     };
+
+    wizard.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t.dataset.opt) { // gleiche Option in mehreren Gruppen synchron halten
+        $$('input[data-opt="' + t.dataset.opt + '"]', wizard).forEach(function (o) { o.checked = t.checked; });
+      }
+      lastClicked = t.dataset.main ? t : null;
+      if (t.dataset.main || t.dataset.opt || t.type === 'radio') refresh();
+    });
+    // Zusatzfragen: zweiter Klick hebt die Auswahl wieder auf
+    $$('.q-detail input[type=radio]', wizard).forEach(function (r) {
+      var lab = r.closest('label');
+      lab.addEventListener('pointerdown', function () { r._was = r.checked; });
+      r.addEventListener('click', function () { if (r._was) { r.checked = false; r._was = false; refresh(); } });
+    });
     next.addEventListener('click', function () { if (valid(cur)) { show(cur + 1); scrollTop(); } });
     back.addEventListener('click', function () { show(cur - 1); scrollTop(); });
+    $('.q-edit', wizard).addEventListener('click', function () { show(0); scrollTop(); });
     wizard.addEventListener('submit', function (e) {
       if (!valid(cur)) { e.preventDefault(); return; }
+      renderSummary();
       var total = 0;
       $$('input[type=file]', wizard).forEach(function (f) { if (f.files[0]) total += f.files[0].size; });
       if (total > 8 * 1024 * 1024) { e.preventDefault(); err.textContent = 'Die Dateien sind zusammen grösser als 8 MB. Bitte verkleinern oder per E-Mail nachreichen.'; }
     });
+
+    var pre = MAP[new URLSearchParams(location.search).get('leistung')];
+    if (pre) { var pm = $('input[data-main="' + pre + '"]', wizard); if (pm) pm.checked = true; }
+    refresh();
     show(0);
   }
 
