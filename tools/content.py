@@ -13,13 +13,20 @@ COMPANY = {
     "email": "info@wow-print.ch",
     "legal_name": "WOW-Print Monaci",
     "uid": "CHE-268.578.431",
+    "owner": "Sarah Katharina Monaci",
+    "founded": "",        # Gründungsjahr, z. B. "2024" (kommt von der Inhaberin)
+    "price_range": "",    # z. B. "CHF 50 – 5000" (kommt von der Inhaberin)
+    "profiles": [],       # weitere Profile: Google-Unternehmensprofil, local.ch, search.ch, LinkedIn …
     "instagram": "https://www.instagram.com/wow_print_ch/",
     "facebook": "#",
     "domain": "https://wow-print.ch",
     "maps": "https://www.google.com/maps/search/?api=1&query=L%C3%B6wengartenstrasse+6%2C+9400+Rorschach",
 }
 
-HOURS = [("Mo – Fr", "0900 – 1200"), ("", "1400 – 1700")]
+# Datum der letzten inhaltlichen Änderung der Leistungsseiten (sichtbar als «Stand» und in den Schema-Daten)
+UPDATED = "2026-11-21"
+
+HOURS = [("Mo – Fr", "09:00 – 12:00"), ("", "14:00 – 17:00")]
 
 SERVICES = [
     {

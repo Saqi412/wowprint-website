@@ -25,3 +25,6 @@
 - [Über uns](https://wow-print.ch/ueber-uns/)
 - [Kontakt](https://wow-print.ch/kontakt/)
 - [Impressum](https://wow-print.ch/impressum/)
+
+## Volltext
+- [llms-full.txt](https://wow-print.ch/llms-full.txt): alle Leistungen mit Angebot und FAQ

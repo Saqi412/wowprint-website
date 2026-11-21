@@ -539,6 +539,83 @@
     });
   });
 
+  /* ---------- Lightbox für Projektbilder ---------- */
+  (function () {
+    var SEL = '.project-card, .work-card';
+    var cards = $$(SEL);
+    if (!cards.length) return;
+    var box = document.createElement('div');
+    box.className = 'lightbox';
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-label', 'Bildansicht');
+    box.hidden = true;
+    box.innerHTML = '<button class="lb-close" type="button" aria-label="Schliessen"><span></span><span></span></button>' +
+      '<button class="lb-nav lb-prev" type="button" aria-label="Vorheriges Bild">←</button>' +
+      '<figure class="lb-fig"><img alt=""><figcaption><b></b><small></small><span class="lb-count"></span></figcaption></figure>' +
+      '<button class="lb-nav lb-next" type="button" aria-label="Nächstes Bild">→</button>';
+    document.body.appendChild(box);
+    var img = $('img', box), cap = $('figcaption b', box), meta = $('figcaption small', box), cnt = $('.lb-count', box);
+    var list = [], idx = 0, lastFocus = null;
+
+    var visible = function (c) { return c.offsetParent !== null && !c.classList.contains('is-out'); };
+    var render = function () {
+      var c = list[idx], src = $('img', c);
+      img.src = src.currentSrc || src.src;
+      img.alt = src.alt;
+      var h = $('h3', c), s = $('small, .meta', c);
+      cap.textContent = h ? h.textContent : '';
+      meta.textContent = s ? s.textContent : '';
+      cnt.textContent = list.length > 1 ? (idx + 1) + ' / ' + list.length : '';
+      $$('.lb-nav', box).forEach(function (b) { b.hidden = list.length < 2; });
+    };
+    var open = function (card) {
+      var scope = card.parentNode;
+      list = $$(SEL, scope).filter(visible);
+      idx = Math.max(0, list.indexOf(card));
+      lastFocus = document.activeElement;
+      render();
+      box.hidden = false;
+      document.documentElement.classList.add('lb-open');
+      if (lenis) lenis.stop();
+      requestAnimationFrame(function () { box.classList.add('is-open'); });
+      $('.lb-close', box).focus();
+    };
+    var close = function () {
+      box.classList.remove('is-open');
+      document.documentElement.classList.remove('lb-open');
+      if (lenis) lenis.start();
+      setTimeout(function () { box.hidden = true; img.removeAttribute('src'); }, 300);
+      if (lastFocus) lastFocus.focus();
+    };
+    var go = function (d) { idx = (idx + d + list.length) % list.length; render(); };
+
+    cards.forEach(function (c) {
+      c.setAttribute('tabindex', '0');
+      c.setAttribute('role', 'button');
+      c.setAttribute('aria-label', 'Bild gross anzeigen' + ($('h3', c) ? ': ' + $('h3', c).textContent : ''));
+      c.addEventListener('click', function () { open(c); });
+      c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); } });
+    });
+    $('.lb-close', box).addEventListener('click', close);
+    $('.lb-prev', box).addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
+    $('.lb-next', box).addEventListener('click', function (e) { e.stopPropagation(); go(1); });
+    box.addEventListener('click', function (e) { if (e.target === box || e.target.classList.contains('lb-fig')) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') go(-1);
+      else if (e.key === 'ArrowRight') go(1);
+    });
+    var x0 = null;
+    box.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50 && list.length > 1) go(dx < 0 ? 1 : -1);
+    });
+  })();
+
   /* ---------- Jahr ---------- */
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();

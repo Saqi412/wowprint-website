@@ -10,7 +10,9 @@ import sys
 from html import escape
 
 sys.path.insert(0, os.path.dirname(__file__))
-from content import COMPANY, HOURS, SERVICES, PROJECTS, PROCESS, WOWLAB  # noqa: E402
+from content import COMPANY, HOURS, SERVICES, PROJECTS, PROCESS, WOWLAB, UPDATED  # noqa: E402
+_MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
+UPDATED_TEXT = f"{int(UPDATED[8:10])}. {_MONATE[int(UPDATED[5:7]) - 1]} {UPDATED[:4]}"
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "site")
 PREVIEW = "--preview" in sys.argv
@@ -81,7 +83,7 @@ def wordmark(cls=""):
 
 
 def lines(*ls):
-    return "".join(f'<span class="line"><span>{l}</span></span>' for l in ls)
+    return " ".join(f'<span class="line"><span>{l}</span></span>' for l in ls)
 
 
 def socials():
@@ -123,7 +125,7 @@ def header(p, current=""):
 <a class="skip-link" href="#main">Zum Inhalt springen</a>
 <div class="preloader" aria-hidden="true">
   <div class="preloader-word"><span>W</span><span>O</span><span>W</span></div>
-  <div class="preloader-claim">Wir machen Sie sichtbar.</div>
+  <div class="preloader-claim">Wir machen Sie WOW.</div>
   <div class="preloader-count">0</div>
 </div>
 <div class="page-transition" aria-hidden="true"><span></span><span></span></div>
@@ -163,7 +165,7 @@ def footer(p):
     <div class="footer-grid">
       <div class="footer-brand">
         {wordmark()}
-        <p>Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. Wir machen Sie sichtbar.</p>
+        <p>Fahrzeugbeschriftung, Werbetechnik, Textil, Print und Design aus Rorschach. Wir machen Sie WOW.</p>
         <div style="margin-top:26px">{socials()}</div>
       </div>
       <div><h4>STUDIO</h4><p>{C["name"]}<br>{C["street"]}<br>{C["zip"]} {C["city"]}<br>{C["country"]}</p>
@@ -200,7 +202,7 @@ def cta_band(p, title_lines=("Machen wir", "etwas WOW.")):
     return f"""
 <section class="cta-band section">
   <div class="wrap">
-    <h2 class="cta-title display" data-lines>{lines(l1)}<span class="line"><span><span class="fill"><span class="fill-base">{fill_text(l2)}</span><span class="fill-top" aria-hidden="true">{fill_text(l2)}</span></span></span></span></h2>
+    <h2 class="cta-title display" data-lines>{lines(l1)} <span class="line"><span><span class="fill"><span class="fill-base">{fill_text(l2)}</span><span class="fill-top" aria-hidden="true">{fill_text(l2)}</span></span></span></span></h2>
     <div class="cta-side">
       <p>Haben Sie ein Projekt?</p>
       <a class="btn" href="{p.url("kontakt/")}" data-magnetic=".3">Kontakt aufnehmen {ARROW}</a>
@@ -251,11 +253,15 @@ def business_ld():
         "telephone": C["phone_intl"],
         "address": {"@type": "PostalAddress", "streetAddress": C["street"], "postalCode": C["zip"],
                     "addressLocality": C["city"], "addressRegion": "SG", "addressCountry": "CH"},
-        "areaServed": [{"@type": "Country", "name": "Schweiz"}],
+        "areaServed": [{"@type": "City", "name": "Rorschach"}, {"@type": "City", "name": "St. Gallen"},
+                       {"@type": "AdministrativeArea", "name": "Bodensee"}, {"@type": "AdministrativeArea", "name": "St. Galler Rheintal"},
+                       {"@type": "AdministrativeArea", "name": "Thurgau"}, {"@type": "Country", "name": "Schweiz"}],
+        "founder": {"@type": "Person", "name": C["owner"], "jobTitle": "Inhaberin"},
+        **{k: C[k2] for k, k2 in (("foundingDate", "founded"), ("priceRange", "price_range")) if C.get(k2)},
         "openingHoursSpecification": [
             {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
              "opens": o, "closes": c} for o, c in (("09:00", "12:00"), ("14:00", "17:00"))],
-        "sameAs": [C["instagram"]],
+        "sameAs": [C["instagram"]] + C.get("profiles", []),
         "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Leistungen", "itemListElement": [
             {"@type": "Offer", "itemOffered": {"@type": "Service", "name": f'{s["title"]}: {s.get("seo_sub", s["sub"])}',
              "url": C["domain"] + "/leistungen/" + s["slug"] + "/"}} for s in SERVICES]},
@@ -270,7 +276,8 @@ def service_ld(s):
     return [
         {"@context": "https://schema.org", "@type": "Service", "name": s.get("seo_sub", s["sub"]), "serviceType": s["title"],
          "description": s["short"], "provider": {"@id": C["domain"] + "/#firma"},
-         "areaServed": {"@type": "Country", "name": "Schweiz"}, "url": C["domain"] + "/leistungen/" + s["slug"] + "/"},
+         "areaServed": {"@type": "Country", "name": "Schweiz"}, "url": C["domain"] + "/leistungen/" + s["slug"] + "/",
+         "dateModified": UPDATED},
         {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": strip_tags(q), "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}}
             for q, a in s["faq"]]},
@@ -280,7 +287,10 @@ def service_ld(s):
 def seo_files():
     """robots.txt, sitemap.xml und llms.txt (für Suchmaschinen und KI-Crawler)."""
     with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as f:
-        f.write(f"User-agent: *\nAllow: /\nDisallow: /danke/\n\nSitemap: {C['domain']}/sitemap.xml\n")
+        bots = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Bingbot", "Applebot", "Googlebot"]
+        f.write("".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots)
+                + "User-agent: *\nContent-Signal: search=yes, ai-input=yes\nAllow: /\n\n"
+                + f"Sitemap: {C['domain']}/sitemap.xml\n")
     urls = "".join(f"  <url><loc>{u}</loc></url>\n" for u in dict.fromkeys(SITEMAP))
     with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
@@ -307,7 +317,27 @@ def seo_files():
 - [Über uns]({C["domain"]}/ueber-uns/)
 - [Kontakt]({C["domain"]}/kontakt/)
 - [Impressum]({C["domain"]}/impressum/)
+
+## Volltext
+- [llms-full.txt]({C["domain"]}/llms-full.txt): alle Leistungen mit Angebot und FAQ
 """)
+    full = [f"# {C['name']}: Leistungen im Detail\n\n{C['name']} ({C['legal_name']}), {C['street']}, {C['zip']} {C['city']}, Schweiz. "
+            f"Telefon {C['phone']}, E-Mail {C['email']}. Öffnungszeiten: {hours}. Stand: {UPDATED}.\n"]
+    for s in SERVICES:
+        sec = [f"## {s['title']}: {s.get('seo_sub', s['sub'])}", f"URL: {C['domain']}/leistungen/{s['slug']}/", "", strip_tags(s["short"])]
+        if s.get("custom"):
+            W = WOWLAB
+            sec += [""] + W["hero"] + [""] + W["idea"] + ["", "### Angebot"]
+            sec += [f"- **{t}** ({tag}) {' '.join(txt)}" for t, tag, txt in W["offers"]]
+            sec += ["", "### Ablauf"] + [f"{n}. {t}: {d}" for n, t, d in W["process"]]
+        else:
+            sec += [""] + s["intro"] + ["", "### Angebot"] + [f"- **{t}:** {d}" for t, d in s["offers"]]
+            sec += ["", "### Warum WOW PRINT"] + [f"- **{t}:** {d}" for t, d in s["why"]]
+        if s["faq"]:
+            sec += ["", "### Häufige Fragen"] + [f"**{strip_tags(q)}**\n{strip_tags(a)}\n" for q, a in s["faq"]]
+        full.append("\n".join(sec) + "\n")
+    with open(os.path.join(OUT, "llms-full.txt"), "w", encoding="utf-8") as f:
+        f.write("\n".join(full))
 
 
 def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=None, noindex=False, ld=None):
@@ -315,7 +345,7 @@ def layout(p, title, desc, body, current="", og_img="hero-car.jpg", canonical=No
     if not noindex:
         SITEMAP.append(canonical_url)
     ld_html = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in [business_ld()] + (ld or []))
-    robots = '<meta name="robots" content="noindex">' if noindex else ""
+    robots = '<meta name="robots" content="noindex,follow">' if noindex else ""
     return f"""<!doctype html>
 <html lang="de-CH">
 <head>
@@ -494,10 +524,10 @@ def home():
   </div>
 </section>
 
-{marquee(["Wir machen Sie sichtbar", "Rorschach", "Schweiz", "Seit Tag eins: WOW"], pink=True, reverse=True)}
+{marquee(["Wir machen Sie WOW", "Rorschach", "Schweiz", "Seit Tag eins: WOW"], pink=True, reverse=True)}
 {cta_band(p)}
 """
-    write(p, layout(p, "WOW PRINT – Wir machen Sie sichtbar. | Werbetechnik Rorschach",
+    write(p, layout(p, "WOW PRINT – Wir machen Sie WOW. | Werbetechnik Rorschach",
                     "WOW PRINT aus Rorschach: Fahrzeugbeschriftung, Schaufenster, Textildruck, Print, Schilder, Design und Websites. Alles aus einer Hand.", body))
 
 
@@ -588,6 +618,7 @@ def service_page(i, s):
     <div class="faq">{faq}</div>
   </div>
 </section>
+<p class="wrap stand muted">Stand: {UPDATED_TEXT}</p>
 <div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl" style="font-size:clamp(30px, {min(8.4, 80 / (len(nxt["title"]) * 0.82 + 0.9)):.2f}vw, 148px)">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
 {cta_band(p)}
 """
@@ -666,10 +697,11 @@ def wowlab_page(i, s):
     <div class="lab-rels">{rel}</div>
   </div>
 </section>
+<p class="wrap stand muted">Stand: {UPDATED_TEXT}</p>
 <div class="next-wrap"><a class="next-link" href="{p.url("leistungen/" + nxt["slug"] + "/")}" data-cursor="Weiter"><div class="wrap"><span class="eyebrow">Nächste Leistung · {nxt["num"]}</span><span class="display d-xl" style="font-size:clamp(30px, {min(8.4, 80 / (len(nxt["title"]) * 0.82 + 0.9)):.2f}vw, 148px)">{nxt["title"]} {ARROW_DIAG}</span></div></a></div>
 <section class="cta-band section lab-cta">
   <div class="wrap">
-    <h2 class="cta-title display" data-lines>{lines("Eine Idee?")}<span class="line"><span><span class="fill"><span class="fill-base">{fill_text("Wir machen sie WOW.")}</span><span class="fill-top" aria-hidden="true">{fill_text("Wir machen sie WOW.")}</span></span></span></span></h2>
+    <h2 class="cta-title display" data-lines>{lines("Eine Idee?")} <span class="line"><span><span class="fill"><span class="fill-base">{fill_text("Wir machen sie WOW.")}</span><span class="fill-top" aria-hidden="true">{fill_text("Wir machen sie WOW.")}</span></span></span></span></h2>
     <div class="cta-side">
       <p>Ein Laden, der anders sein soll. Ein Möbelstück, das es nicht zu kaufen gibt. Ein Raum, der Menschen begeistert. Oder einfach eine verrückte Idee. Erzählen Sie uns davon.</p>
       <a class="btn btn--solid" href="{ask}" data-magnetic=".3">Projekt anfragen {ARROW}</a>
@@ -775,7 +807,7 @@ def contact_page():
       <p class="muted" style="margin:14px 0 36px">Für eine konkrete Offerte mit Dateien nutzen Sie am besten unser <a class="link-u" style="color:var(--ink)" href="{p.url("offerte/")}">Offertenformular</a>.</p>
       <form name="kontakt" method="POST" action="{p.form_action("danke/")}" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="kontakt">
-        <p class="hp"><label>Nicht ausfüllen: <input name="bot-field"></label></p>
+        <p class="hp" aria-hidden="true"><input name="bot-field" tabindex="-1" autocomplete="off"></p>
         <div class="form-grid">
           <div class="field"><label for="k-name">Name</label><input id="k-name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="k-firma">Firma <span class="opt">(optional)</span></label><input id="k-firma" name="firma" autocomplete="organization"></div>
@@ -866,7 +898,7 @@ def quote_page():
       <input type="hidden" name="form-name" value="offerte">
       <input type="hidden" name="leistung" value="">
       <textarea name="auswahl" hidden></textarea>
-      <p class="hp"><label>Nicht ausfüllen: <input name="bot-field"></label></p>
+      <p class="hp" aria-hidden="true"><input name="bot-field" tabindex="-1" autocomplete="off"></p>
       <ol class="wizard-progress wizard-progress--2" aria-hidden="true"><li><span>01 Auswahl</span></li><li><span>02 Kontakt</span></li></ol>
 
       <fieldset data-require-main>
