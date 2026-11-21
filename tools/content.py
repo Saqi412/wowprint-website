@@ -15,7 +15,7 @@ COMPANY = {
     "uid": "CHE-268.578.431",
     "owner": "Sarah Katharina Monaci",
     "founded": "2026",
-    "price_range": "",    # z. B. "CHF 50 – 5000" (kommt von der Inhaberin)
+    "price_range": "CHF 50 – 10’000",
     "profiles": [],       # weitere Profile: Google-Unternehmensprofil, local.ch, search.ch, LinkedIn …
     "instagram": "https://www.instagram.com/wow_print_ch/",
     "facebook": "#",
