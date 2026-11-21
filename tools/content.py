@@ -7,9 +7,9 @@ COMPANY = {
     "zip": "9400",
     "city": "Rorschach",
     "country": "Schweiz",
-    # TODO: echte Kontaktdaten eintragen, sobald vorhanden
-    "phone": "+41 00 000 00 00",
-    "phone_href": "+41000000000",
+    "phone": "079 937 60 87",
+    "phone_href": "+41799376087",
+    "phone_intl": "+41 79 937 60 87",
     "email": "info@wow-print.ch",
     "legal_name": "WOW-Print Monaci",
     "uid": "CHE-268.578.431",

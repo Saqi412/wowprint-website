@@ -248,7 +248,7 @@ def business_ld():
         "logo": C["domain"] + "/assets/img/wowprint-logo.svg", "image": C["domain"] + "/assets/img/hero-car.jpg",
         "description": "Werbetechnik und Design aus Rorschach: Fahrzeugbeschriftung und Folierung, Schaufenster, Textildruck, Print, Schilder, Grafikdesign und Websites.",
         "email": C["email"], "taxID": C["uid"],
-        **({"telephone": C["phone"]} if "000 00 00" not in C["phone"] else {}),
+        "telephone": C["phone_intl"],
         "address": {"@type": "PostalAddress", "streetAddress": C["street"], "postalCode": C["zip"],
                     "addressLocality": C["city"], "addressRegion": "SG", "addressCountry": "CH"},
         "areaServed": [{"@type": "Country", "name": "Schweiz"}],
