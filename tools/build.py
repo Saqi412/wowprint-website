@@ -287,9 +287,11 @@ def service_ld(s):
 def seo_files():
     """robots.txt, sitemap.xml und llms.txt (für Suchmaschinen und KI-Crawler)."""
     with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as f:
-        bots = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Bingbot", "Applebot", "Googlebot"]
+        bots = ["OAI-SearchBot", "ChatGPT-User", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Perplexity-User", "Bingbot", "Applebot", "Googlebot",
+                # Training erlaubt (Entscheid Inhaberin, 21.11.2026)
+                "GPTBot", "ClaudeBot", "Google-Extended", "Applebot-Extended", "CCBot"]
         f.write("".join(f"User-agent: {b}\nAllow: /\n\n" for b in bots)
-                + "User-agent: *\nContent-Signal: search=yes, ai-input=yes\nAllow: /\n\n"
+                + "User-agent: *\nContent-Signal: search=yes, ai-input=yes, ai-train=yes\nAllow: /\n\n"
                 + f"Sitemap: {C['domain']}/sitemap.xml\n")
     urls = "".join(f"  <url><loc>{u}</loc></url>\n" for u in dict.fromkeys(SITEMAP))
     with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as f:

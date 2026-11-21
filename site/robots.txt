@@ -25,8 +25,23 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 User-agent: *
-Content-Signal: search=yes, ai-input=yes
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 
 Sitemap: https://wow-print.ch/sitemap.xml

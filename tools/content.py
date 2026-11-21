@@ -14,7 +14,7 @@ COMPANY = {
     "legal_name": "WOW-Print Monaci",
     "uid": "CHE-268.578.431",
     "owner": "Sarah Katharina Monaci",
-    "founded": "",        # Gründungsjahr, z. B. "2024" (kommt von der Inhaberin)
+    "founded": "2026",
     "price_range": "",    # z. B. "CHF 50 – 5000" (kommt von der Inhaberin)
     "profiles": [],       # weitere Profile: Google-Unternehmensprofil, local.ch, search.ch, LinkedIn …
     "instagram": "https://www.instagram.com/wow_print_ch/",
