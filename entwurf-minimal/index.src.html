@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>WOW PRINT · Entwurf minimal</title>
+<meta name="description" content="Designentwurf WOW PRINT im minimalistischen Stil: Fahrzeugbeschriftung, Schaufenster, Textil, Druck, Schilder, Design, Digital und WOW LAB aus Rorschach.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:"Jost";src:url(assets/fonts/jost.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Inter";src:url(assets/fonts/inter.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --pink:#F5BDBE; --pink-soft:#FBE6E6; --ink:#111; --text:#555; --muted:#8a8a8a;
+  --line:#ececec; --paper:#fff; --grey:#f6f6f6; --dark:#1b1b1b;
+  --head:"Jost",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif;
+  --track:.28em; --wrap:1240px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--text);font:300 15px/1.75 var(--body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+.caps{font-family:var(--head);font-weight:300;text-transform:uppercase;letter-spacing:var(--track);color:var(--ink)}
+.kicker{font-size:12px;color:var(--muted);text-align:center;margin:0 0 18px}
+.h2{font-size:20px;text-align:center;margin:0 0 70px}
+.lead{max-width:640px;margin:-40px auto 80px;text-align:center;color:var(--muted)}
+.btn{display:inline-block;font:400 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;padding:15px 26px;transition:background .3s,color .3s}
+.btn-dark{background:var(--ink);color:#fff}.btn-dark:hover{background:var(--pink);color:var(--ink)}
+.btn-light{background:#fff;color:var(--ink)}.btn-light:hover{background:var(--ink);color:#fff}
+.btn-soft{background:var(--grey);color:var(--text);padding:11px 18px;font-size:10px}.btn-soft:hover{background:var(--pink);color:var(--ink)}
+section{padding:130px 0}
+
+/* ---------- Hero ---------- */
+.hero{min-height:100vh;min-height:100svh;background:var(--pink);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;position:relative;text-align:center}
+.hero .logo{width:min(440px,78vw);color:var(--ink);--ko:var(--pink)}
+.hero .claim{margin:26px 0 0;font-size:clamp(11px,1.3vw,14px);letter-spacing:.55em;padding-left:.55em}
+.hero nav{margin-top:64px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 34px}
+.hero nav a{font:400 12px/1 var(--head);letter-spacing:.24em;text-transform:uppercase;color:rgba(17,17,17,.55);transition:color .3s}
+.hero nav a:hover,.hero nav a.on{color:var(--ink)}
+.scroll-hint{position:absolute;bottom:34px;left:50%;width:1px;height:54px;background:rgba(17,17,17,.25);overflow:hidden}
+.scroll-hint::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:var(--ink);animation:drip 2.2s ease-in-out infinite}
+@keyframes drip{to{top:100%}}
+.logo .ko{fill:var(--ko,#fff)}
+
+/* ---------- Sticky header ---------- */
+.bar{position:fixed;inset:0 0 auto;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.bar.show{transform:none}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+.bar .logo{width:150px;color:var(--ink);--ko:#fff}
+.bar nav{display:flex;gap:30px}
+.bar nav a{font:400 11px/1 var(--head);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.bar nav a:hover{color:var(--ink)}
+.bar .burger{display:none;background:none;border:0;padding:8px;cursor:pointer}
+.burger span{display:block;width:24px;height:1px;background:var(--ink);margin:6px 0;transition:transform .3s}
+.menu{position:fixed;inset:0;z-index:60;background:var(--pink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;opacity:0;pointer-events:none;transition:opacity .4s}
+.menu.open{opacity:1;pointer-events:auto}
+.menu a{font:300 18px/1 var(--head);letter-spacing:.3em;text-transform:uppercase;color:var(--ink)}
+.menu .close{position:absolute;top:22px;right:24px;background:none;border:0;font:200 34px/1 var(--head);cursor:pointer;color:var(--ink)}
+
+/* ---------- Bildband ---------- */
+.band{height:78vh;min-height:420px;overflow:hidden;position:relative}
+.band img{position:absolute;inset:-8% 0 auto;width:100%;height:116%;object-fit:cover;will-change:transform}
+
+/* ---------- Leistungen ---------- */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.card{position:relative;aspect-ratio:1/1.12;border:1px solid var(--line);border-radius:6px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;overflow:hidden;transition:background .45s,border-color .45s,box-shadow .45s}
+.card svg{width:46px;height:46px;stroke:var(--ink);stroke-width:1.1;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card h3{margin:26px 0 0;font-size:13px;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.card .more{position:absolute;left:28px;right:28px;bottom:26px;opacity:0;transform:translateY(14px);transition:opacity .4s,transform .5s cubic-bezier(.2,.7,.2,1)}
+.card .more p{margin:0 0 16px;font-size:13px;line-height:1.6;color:var(--ink)}
+.card .more span{font:400 10px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:3px;color:var(--ink)}
+@media (hover:hover){
+  .card:hover{background:var(--pink);border-color:var(--pink);box-shadow:0 30px 60px -30px rgba(17,17,17,.25)}
+  .card:hover svg{transform:translateY(-92px) scale(.85)}
+  .card:hover h3{transform:translateY(-92px)}
+  .card:hover .more{opacity:1;transform:none}
+}
+
+/* ---------- CTA ---------- */
+.cta{background:var(--pink);padding:110px 0}
+.cta .wrap{display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.cta h2{margin:0;font-size:clamp(15px,1.8vw,20px);line-height:1.7;max-width:560px}
+
+/* ---------- Projekte ---------- */
+.proj{display:grid;grid-template-columns:1.35fr 1fr;gap:90px;align-items:center;margin-bottom:150px}
+.proj:last-of-type{margin-bottom:90px}
+.proj.flip{grid-template-columns:1fr 1.35fr}
+.proj.flip .pimg{order:2}
+.pimg{overflow:hidden;aspect-ratio:3/2;background:var(--grey)}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.proj:hover .pimg img{transform:scale(1.04)}
+.ptxt{max-width:380px}
+.ptxt .tag{font:600 12px/1 var(--body);color:#777;margin:0 0 18px}
+.ptxt h3{font-size:17px;margin:0 0 20px}
+.ptxt p{margin:0 0 26px;color:var(--muted)}
+.center{text-align:center}
+
+/* ---------- WOW LAB ---------- */
+.lab{padding:0 0 130px}
+.lab-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:0}
+.lab-row figure{margin:0;aspect-ratio:4/5;overflow:hidden}
+.lab-row img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.lab-row figure:hover img{transform:scale(1.05)}
+.lab-copy{max-width:620px;margin:0 auto 70px;text-align:center}
+.lab-copy p{color:var(--muted);margin:0 0 30px}
+
+/* ---------- Prozess (dunkel) ---------- */
+.dark{background:var(--dark);color:#bbb}
+.dark .h2,.dark .caps{color:#fff}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.step{text-align:center}
+.ring{width:150px;height:150px;margin:0 auto 30px;border-radius:50%;background:#f6f6f6;display:flex;align-items:center;justify-content:center;font:200 46px/1 var(--head);color:var(--ink);transition:background .4s,transform .5s}
+.step:hover .ring{background:var(--pink);transform:translateY(-6px)}
+.step h3{font-size:13px;margin:0 0 12px}
+.step p{margin:0 auto;max-width:230px;font-size:13px;color:#9a9a9a}
+
+/* ---------- Warum ---------- */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:80px 40px}
+.why div{text-align:center}
+.why svg{width:44px;height:44px;stroke:var(--ink);stroke-width:1.1;fill:none;stroke-linecap:round;stroke-linejoin:round;margin:0 auto 24px;display:block}
+.why h3{font-size:12px;margin:0 0 10px}
+.why p{margin:0 auto;max-width:260px;font-size:13px;color:var(--muted)}
+
+/* ---------- Quick Links ---------- */
+.ql{padding-top:0}
+.links{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 30px}
+.links a{display:block;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 10px;text-align:center;font:400 11px/1.4 var(--head);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);transition:color .3s,border-color .3s}
+.links a:hover{color:var(--ink);border-color:var(--pink)}
+
+/* ---------- Kontakt ---------- */
+.contact{background:#fbfbfb;padding:100px 0}
+.contact .kicker{color:var(--muted);margin-bottom:70px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center}
+.cols svg{width:24px;height:24px;stroke:var(--ink);stroke-width:1.3;fill:none;stroke-linecap:round;stroke-linejoin:round;margin:0 auto 18px;display:block}
+.cols small{display:block;font:400 11px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.cols p{margin:0;font-size:13px;line-height:1.8;color:var(--muted)}
+.cols a{color:var(--ink)}
+.cols a:hover{color:#c97f81}
+
+/* ---------- Footer ---------- */
+footer{background:var(--grey);padding:100px 0 60px;text-align:center;font-size:13px}
+footer .logo{width:120px;margin:0 auto 40px;color:var(--ink);--ko:var(--grey)}
+.social{display:flex;justify-content:center;gap:22px;margin-bottom:40px}
+.social svg{width:18px;height:18px;stroke:#555;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+.social a:hover svg{stroke:#c97f81}
+.legal{margin:46px 0 24px;color:#333;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.legal a:hover{color:#c97f81}
+.legal i{font-style:normal;color:#bbb;margin:0 8px}
+footer b{font-weight:600;color:#333}
+
+.totop{position:fixed;right:22px;bottom:22px;z-index:40;width:44px;height:44px;border:0;border-radius:4px;background:rgba(17,17,17,.18);color:#fff;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .4s,background .3s}
+.totop.show{opacity:1;pointer-events:auto}.totop:hover{background:var(--ink)}
+.totop svg{width:16px;height:16px;stroke:#fff;stroke-width:1.8;fill:none}
+.draft{position:fixed;left:16px;bottom:16px;z-index:40;font:400 10px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;background:#fff;border:1px solid var(--line);padding:9px 12px;color:var(--muted)}
+
+/* Reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.scroll-hint::after{animation:none}html{scroll-behavior:auto}}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1024px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:24px}
+  .proj,.proj.flip{grid-template-columns:1fr;gap:40px;margin-bottom:110px}
+  .proj.flip .pimg{order:0}
+  .steps{grid-template-columns:repeat(2,1fr);gap:60px 30px}
+  .links{grid-template-columns:repeat(2,1fr)}
+  .cols{grid-template-columns:repeat(2,1fr);gap:56px 30px}
+  .bar nav{display:none}.bar .burger{display:block}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  section{padding:90px 0}
+  .h2{margin-bottom:50px}
+  .lead{margin:-28px auto 56px}
+  .hero nav{gap:14px 22px;margin-top:48px}
+  .grid{gap:14px}
+  .card{aspect-ratio:1/1.05;padding:16px}
+  .card h3{font-size:11px;letter-spacing:.2em}
+  .card svg{width:38px;height:38px}
+  .why{grid-template-columns:1fr 1fr;gap:56px 20px}
+  .lab-row{grid-template-columns:1fr 1fr}.lab-row figure:last-child{display:none}
+  .ring{width:120px;height:120px;font-size:38px}
+  .cols{grid-template-columns:1fr}
+  .band{height:56vh;min-height:300px}
+  .draft{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar">
+  <div class="wrap">
+    <a href="#top" aria-label="WOW PRINT Startseite">{{LOGO}}</a>
+    <nav aria-label="Hauptnavigation">
+      <a href="#leistungen">Leistungen</a><a href="#projekte">Projekte</a><a href="#wowlab">WOW LAB</a><a href="#ablauf">Ablauf</a><a href="#kontakt">Kontakt</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Menü öffnen"><span></span><span></span></button>
+  </div>
+</header>
+<div class="menu" id="menu" aria-hidden="true">
+  <button class="close" id="close" aria-label="Menü schliessen">×</button>
+  <a href="#leistungen">Leistungen</a><a href="#projekte">Projekte</a><a href="#wowlab">WOW LAB</a><a href="#ablauf">Ablauf</a><a href="#kontakt">Kontakt</a>
+</div>
+
+<main id="top">
+  <section class="hero" id="hero">
+    {{LOGO}}
+    <p class="claim caps">Wir machen Sie WOW.</p>
+    <nav aria-label="Navigation">
+      <a class="on" href="#top">Home</a><a href="#leistungen">Leistungen</a><a href="#projekte">Projekte</a><a href="#wowlab">WOW LAB</a><a href="#kontakt">Kontakt</a>
+    </nav>
+    <span class="scroll-hint" aria-hidden="true"></span>
+  </section>
+
+  <section id="leistungen">
+    <div class="wrap">
+      <p class="kicker caps rv">Werbetechnik · Rorschach</p>
+      <h2 class="h2 caps rv">Leistungen</h2>
+      <div class="grid">
+{{CARDS}}
+      </div>
+    </div>
+  </section>
+
+  <div class="band" aria-hidden="true"><img data-parallax src="assets/img/hero-car.jpg" alt=""></div>
+
+  <section id="projekte">
+    <div class="wrap">
+      <h2 class="h2 caps rv">Unsere Projekte</h2>
+      <p class="lead rv">Ein kleiner Auszug aus unserer Arbeit: Fahrzeuge, Schaufenster, Schilder und Textilien, gestaltet und produziert in Rorschach.</p>
+{{PROJECTS}}
+      <div class="center rv"><a class="btn btn-dark" href="https://wow-print.ch/projekte/">Alle Projekte</a></div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2 class="caps rv">Auf der Suche nach einem Auftritt, den man nicht übersieht?</h2>
+      <a class="btn btn-light rv" href="https://wow-print.ch/offerte/">Offerte anfragen</a>
+    </div>
+  </section>
+
+  <section id="wowlab">
+    <div class="wrap">
+      <p class="kicker caps rv">Beyond ordinary</p>
+      <h2 class="h2 caps rv">WOW LAB</h2>
+      <div class="lab-copy rv">
+        <p>Wir verwandeln gewöhnliche Räume in aussergewöhnliche Erlebnisse. Interior Design, individueller Möbelbau und über 20 Jahre Erfahrung in Industrial Design und Konstruktion.</p>
+        <a class="btn btn-soft" href="https://wow-print.ch/leistungen/wow-lab/">WOW LAB entdecken</a>
+      </div>
+    </div>
+    <div class="wrap lab-row rv">
+      <figure><img loading="lazy" src="assets/img/wowlab-1.jpg" alt="Gestalteter Laden mit Holzregalen"></figure>
+      <figure><img loading="lazy" src="assets/img/wowlab-7.jpg" alt="Pinker Holzstuhl vor rosa Wand"></figure>
+      <figure><img loading="lazy" src="assets/img/wowlab-3.jpg" alt="Möbelentwurf am Bildschirm mit Modell"></figure>
+    </div>
+  </section>
+
+  <section class="dark" id="ablauf">
+    <div class="wrap">
+      <h2 class="h2 caps rv">So arbeiten wir</h2>
+      <div class="steps">
+{{STEPS}}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="h2 caps rv">Warum WOW PRINT?</h2>
+      <div class="why">
+        <div class="rv"><svg viewBox="0 0 48 48"><path d="M8 14h32v20H8z"/><path d="M8 14l16 11 16-11"/></svg><h3 class="caps">Alles aus einer Hand</h3><p>Gestaltung, Druck, Plot und Montage. Ein Ansprechpartner von Anfang bis Ende.</p></div>
+        <div class="rv"><svg viewBox="0 0 48 48"><path d="M24 6c-7 0-12 5-12 11.5 0 4.5 2.6 7.4 4.8 9.6 1.4 1.4 2.2 3 2.2 4.9V34h10v-2c0-1.9.8-3.5 2.2-4.9 2.2-2.2 4.8-5.1 4.8-9.6C36 11 31 6 24 6z"/><path d="M19 38h10M21 42h6"/></svg><h3 class="caps">Kreativ statt 0815</h3><p>Wir sind kreative Artisten. Werbung können viele, Kunst nicht.</p></div>
+        <div class="rv"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="2"/></svg><h3 class="caps">Präzise verarbeitet</h3><p>Hochwertige Materialien und saubere Kanten, damit es lange schön bleibt.</p></div>
+        <div class="rv"><svg viewBox="0 0 48 48"><path d="M10 12h28v18H22l-8 7v-7h-4z"/><path d="M17 21h.01M24 21h.01M31 21h.01"/></svg><h3 class="caps">Persönlich beraten</h3><p>Wir hören zu, denken mit und zeigen Entwürfe, bis es passt.</p></div>
+        <div class="rv"><svg viewBox="0 0 48 48"><circle cx="24" cy="26" r="15"/><path d="M24 18v8l5 4M20 6h8M24 6v5"/></svg><h3 class="caps">Pünktlich umgesetzt</h3><p>Klare Termine, verlässliche Abläufe und Montage mit wenig Unterbruch.</p></div>
+        <div class="rv"><svg viewBox="0 0 48 48"><path d="M24 42s13-12.5 13-23a13 13 0 0 0-26 0c0 10.5 13 23 13 23z"/><circle cx="24" cy="19" r="4.5"/></svg><h3 class="caps">Aus Rorschach</h3><p>Zuhause am Bodensee, im Einsatz für Kundinnen und Kunden in der ganzen Schweiz.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ql">
+    <div class="wrap">
+      <h2 class="h2 caps rv">Quick Links</h2>
+      <div class="links rv">
+{{LINKS}}
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="kontakt">
+    <div class="wrap">
+      <p class="kicker caps">Kontaktieren Sie uns</p>
+      <div class="cols">
+        <div class="rv"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><small>Rufen Sie an</small><p><a href="tel:+41799376087">079 937 60 87</a></p></div>
+        <div class="rv"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><small>Adresse</small><p>WOW PRINT<br>Löwengartenstrasse 6<br>CH-9400 Rorschach</p></div>
+        <div class="rv"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><small>Öffnungszeiten</small><p>Mo – Fr<br>09:00 – 12:00<br>14:00 – 17:00</p></div>
+        <div class="rv"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3z"/><path d="M3 6l9 7 9-7"/></svg><small>E-Mail</small><p><a href="mailto:info@wow-print.ch">info@wow-print.ch</a></p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  {{LOGO}}
+  <div class="social">
+    <a href="https://www.instagram.com/wow_print_ch/" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a>
+    <a href="mailto:info@wow-print.ch" aria-label="E-Mail"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3z"/><path d="M3 6l9 7 9-7"/></svg></a>
+    <a href="tel:+41799376087" aria-label="Telefon"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg></a>
+  </div>
+  <a class="btn btn-dark" href="https://wow-print.ch/offerte/">Offerte anfragen</a>
+  <p class="legal"><a href="https://wow-print.ch/impressum/">Impressum</a><i>|</i><a href="https://wow-print.ch/datenschutz/">Datenschutz</a><i>|</i><a href="https://wow-print.ch/agb/">AGB</a></p>
+  <p><b>© 2026 WOW PRINT</b><br>Wir machen Sie WOW.</p>
+</footer>
+
+<button class="totop" id="totop" aria-label="Nach oben"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+<span class="draft">Entwurf · minimal</span>
+
+<script>
+(function(){
+  var bar=document.getElementById('bar'),top=document.getElementById('totop'),hero=document.getElementById('hero');
+  var par=document.querySelector('[data-parallax]'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function onScroll(){
+    var y=scrollY,h=hero.offsetHeight;
+    bar.classList.toggle('show',y>h-80);
+    top.classList.toggle('show',y>h);
+    if(par&&!reduce){var r=par.parentNode.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight){par.style.transform='translateY('+((r.top/innerHeight)*-8)+'%)';}}
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  top.onclick=function(){scrollTo({top:0,behavior:reduce?'auto':'smooth'})};
+  var menu=document.getElementById('menu');
+  function toggle(o){menu.classList.toggle('open',o);menu.setAttribute('aria-hidden',!o)}
+  document.getElementById('burger').onclick=function(){toggle(true)};
+  document.getElementById('close').onclick=function(){toggle(false)};
+  menu.querySelectorAll('a').forEach(function(a){a.onclick=function(){toggle(false)}});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.rv').forEach(function(el,i){el.style.transitionDelay=((el.dataset.d||0)*90)+'ms';io.observe(el)});
+  }else{document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in')})}
+})();
+</script>
+</body>
+</html>
